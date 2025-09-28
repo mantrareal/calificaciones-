@@ -428,6 +428,45 @@ export default function App() {
             </CardContent>
           </Card>
         )}
+
+        {/* Admin Tools - For testing */}
+        <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+          <CardContent className="p-6 text-center">
+            <div className="mb-4">
+              <UserCheck className="h-12 w-12 text-purple-500 mx-auto" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Cambiar Rol</h3>
+            <p className="text-gray-600 mb-4 text-sm">
+              Cambiar entre Liner/Closer/Manager
+            </p>
+            <div className="space-y-2">
+              <Button 
+                onClick={() => changeUserRole('liner')}
+                variant={currentUser.role === 'liner' ? 'default' : 'outline'}
+                className="w-full"
+                size="sm"
+              >
+                Ser Liner
+              </Button>
+              <Button 
+                onClick={() => changeUserRole('closer')}
+                variant={currentUser.role === 'closer' ? 'default' : 'outline'}
+                className="w-full"
+                size="sm"
+              >
+                Ser Closer
+              </Button>
+              <Button 
+                onClick={() => changeUserRole('manager')}
+                variant={currentUser.role === 'manager' ? 'default' : 'outline'}
+                className="w-full"
+                size="sm"
+              >
+                Ser Manager
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
