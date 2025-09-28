@@ -91,14 +91,14 @@ async function setupDatabase() {
         );`,
         `CREATE TABLE ratings (
           id TEXT PRIMARY KEY,
-          "evaluatorId" TEXT NOT NULL,
-          "evaluatedId" TEXT NOT NULL,
-          "ratingsJson" JSONB NOT NULL,
+          evaluator_id TEXT NOT NULL,
+          evaluated_id TEXT NOT NULL,
+          ratings_json JSONB NOT NULL,
           comments TEXT,
           date DATE NOT NULL,
-          "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          FOREIGN KEY ("evaluatorId") REFERENCES users(id),
-          FOREIGN KEY ("evaluatedId") REFERENCES users(id)
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+          FOREIGN KEY (evaluator_id) REFERENCES users(id),
+          FOREIGN KEY (evaluated_id) REFERENCES users(id)
         );`,
         `CREATE TABLE follow_ups (
           id TEXT PRIMARY KEY,
