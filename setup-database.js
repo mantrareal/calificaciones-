@@ -131,21 +131,21 @@ async function setupDatabase() {
     // Sample users
     const sampleUsers = [
       {
-        id: 'user_1',
+        id: 'liner-001-' + Date.now(),
         email: 'liner1@test.com',
         first_name: 'Juan',
         last_name: 'Pérez',
         role: 'liner'
       },
       {
-        id: 'user_2',
+        id: 'closer-001-' + (Date.now() + 1),
         email: 'closer1@test.com',
         first_name: 'María',
         last_name: 'García',
         role: 'closer'
       },
       {
-        id: 'user_3',
+        id: 'manager-001-' + (Date.now() + 2),
         email: 'manager1@test.com',
         first_name: 'Carlos',
         last_name: 'López',
