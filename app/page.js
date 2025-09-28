@@ -169,6 +169,32 @@ export default function App() {
     }
   }
 
+  const changeUserRole = async (newRole) => {
+    try {
+      const response = await fetch('/api/users/update-role', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          newRole
+        })
+      })
+
+      if (response.ok) {
+        const updatedUser = { ...currentUser, role: newRole }
+        auth.setCurrentUser(updatedUser)
+        setCurrentUser(updatedUser)
+        alert(`Rol cambiado a ${newRole} exitosamente!`)
+        fetchData()
+      } else {
+        alert('Error al cambiar rol')
+      }
+    } catch (error) {
+      console.error('Error changing role:', error)
+      alert('Error al cambiar rol')
+    }
+  }
+
   const submitFollowUp = async () => {
     try {
       const response = await fetch('/api/follow-ups', {
