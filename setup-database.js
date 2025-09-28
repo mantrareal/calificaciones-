@@ -133,22 +133,22 @@ async function setupDatabase() {
       {
         id: 'user_1',
         email: 'liner1@test.com',
-        firstName: 'Juan',
-        lastName: 'Pérez',
+        first_name: 'Juan',
+        last_name: 'Pérez',
         role: 'liner'
       },
       {
         id: 'user_2',
         email: 'closer1@test.com',
-        firstName: 'María',
-        lastName: 'García',
+        first_name: 'María',
+        last_name: 'García',
         role: 'closer'
       },
       {
         id: 'user_3',
         email: 'manager1@test.com',
-        firstName: 'Carlos',
-        lastName: 'López',
+        first_name: 'Carlos',
+        last_name: 'López',
         role: 'manager'
       }
     ]
