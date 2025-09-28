@@ -11,10 +11,11 @@ async function initializeDatabase() {
       .limit(1)
     
     // If no error, tables exist
+    console.log('Database tables verified')
     return true
   } catch (error) {
-    // Tables don't exist, create them
-    console.log('Creating database tables...')
+    // Tables don't exist or other error
+    console.log('Database initialization needed:', error.message)
     
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
