@@ -65,7 +65,7 @@ async function setupDatabase() {
       CREATE INDEX idx_ratings_evaluator ON ratings(evaluator_id);
       CREATE INDEX idx_ratings_evaluated ON ratings(evaluated_id);
       CREATE INDEX idx_ratings_date ON ratings(date DESC);
-      CREATE INDEX idx_followups_user ON follow_ups("userId");
+      CREATE INDEX idx_followups_user ON follow_ups(user_id);
     `
 
     // Execute the SQL
