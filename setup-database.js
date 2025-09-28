@@ -84,10 +84,10 @@ async function setupDatabase() {
         `CREATE TABLE users (
           id TEXT PRIMARY KEY,
           email TEXT UNIQUE NOT NULL,
-          "firstName" TEXT NOT NULL,
-          "lastName" TEXT NOT NULL,
+          first_name TEXT NOT NULL,
+          last_name TEXT NOT NULL,
           role TEXT NOT NULL DEFAULT 'liner' CHECK (role IN ('liner', 'closer', 'manager')),
-          "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
         );`,
         `CREATE TABLE ratings (
           id TEXT PRIMARY KEY,
