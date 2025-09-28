@@ -43,10 +43,10 @@ async function setupDatabase() {
       -- Create follow_ups table
       CREATE TABLE follow_ups (
         id TEXT PRIMARY KEY,
-        "userId" TEXT NOT NULL,
-        "dataJson" JSONB NOT NULL,
-        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        FOREIGN KEY ("userId") REFERENCES users(id)
+        user_id TEXT NOT NULL,
+        data_json JSONB NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        FOREIGN KEY (user_id) REFERENCES users(id)
       );
 
       -- Enable Row Level Security
