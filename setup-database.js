@@ -62,8 +62,8 @@ async function setupDatabase() {
       -- Create indexes for performance
       CREATE INDEX idx_users_email ON users(email);
       CREATE INDEX idx_users_role ON users(role);
-      CREATE INDEX idx_ratings_evaluator ON ratings("evaluatorId");
-      CREATE INDEX idx_ratings_evaluated ON ratings("evaluatedId");
+      CREATE INDEX idx_ratings_evaluator ON ratings(evaluator_id);
+      CREATE INDEX idx_ratings_evaluated ON ratings(evaluated_id);
       CREATE INDEX idx_ratings_date ON ratings(date DESC);
       CREATE INDEX idx_followups_user ON follow_ups("userId");
     `
