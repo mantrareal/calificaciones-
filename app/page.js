@@ -30,6 +30,10 @@ export default function App() {
   const [users, setUsers] = useState([])
   const [ratings, setRatings] = useState([])
   const [myRatings, setMyRatings] = useState([])
+  const [filteredUsers, setFilteredUsers] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [rankings, setRankings] = useState([])
+  const [managementStats, setManagementStats] = useState(null)
 
   // Login/Register state
   const [email, setEmail] = useState('')
