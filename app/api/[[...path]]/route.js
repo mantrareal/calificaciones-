@@ -203,6 +203,22 @@ export async function POST(request) {
         
         return NextResponse.json(newUser)
       
+      case 'users/update-role':
+        const { userId, newRole } = body
+        
+        const { data: updatedUser, error: updateError } = await supabase
+          .from('users')
+          .update({ role: newRole })
+          .eq('id', userId)
+          .select()
+          .single()
+        
+        if (updateError) {
+          return NextResponse.json({ error: updateError.message }, { status: 500 })
+        }
+        
+        return NextResponse.json(updatedUser)
+      
       case 'ratings':
         const ratingData = {
           id: generateId(),
