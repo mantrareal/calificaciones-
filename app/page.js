@@ -413,7 +413,7 @@ export default function App() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {(currentUser.role === 'liner' || currentUser.role === 'closer') && (
+        {(currentUser.available_employees?.role === 'liner' || currentUser.available_employees?.role === 'closer' || currentUser.available_employees?.role === 'ftb' || currentUser.available_employees?.role === 'ftm' || currentUser.available_employees?.role === 'ftm_ftb') && (
           <>
             <Card className="cursor-pointer hover:shadow-lg transition-shadow">
               <CardContent className="p-6 text-center">
