@@ -190,13 +190,20 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: currentUser.id,
+          employeeId: currentUser.available_employees.id,
           newRole
         })
       })
 
       if (response.ok) {
-        const updatedUser = { ...currentUser, role: newRole }
+        // Update the current user data
+        const updatedUser = {
+          ...currentUser,
+          available_employees: {
+            ...currentUser.available_employees,
+            role: newRole
+          }
+        }
         auth.setCurrentUser(updatedUser)
         setCurrentUser(updatedUser)
         alert(`Rol cambiado a ${newRole} exitosamente!`)
