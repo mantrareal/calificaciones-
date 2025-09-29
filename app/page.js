@@ -36,6 +36,12 @@ export default function App() {
   const [filteredUsers, setFilteredUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
+  
+  // Estados para filtros gerenciales
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [dateRange, setDateRange] = useState({ start: '', end: '' })
+  const [searchEmployee, setSearchEmployee] = useState('')
+  const [selectedEmployeeForAnalysis, setSelectedEmployeeForAnalysis] = useState('')
 
   // Login/Register state
   const [email, setEmail] = useState('')
