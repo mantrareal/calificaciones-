@@ -42,7 +42,10 @@ export default function App() {
   // Rating state
   const [selectedUserId, setSelectedUserId] = useState('')
   const [ratingData, setRatingData] = useState({})
+  const [yesNoAnswers, setYesNoAnswers] = useState({})
+  const [numberAnswers, setNumberAnswers] = useState({})
   const [comments, setComments] = useState('')
+  const [otherEmployeeName, setOtherEmployeeName] = useState('')
 
   // Follow-up state
   const [followUpData, setFollowUpData] = useState({
