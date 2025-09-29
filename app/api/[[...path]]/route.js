@@ -129,7 +129,10 @@ export async function GET(request) {
       case 'users':
         const { data: users, error: usersError } = await supabase
           .from('users')
-          .select('*')
+          .select(`
+            *,
+            available_employees (*)
+          `)
           .order('created_at', { ascending: false })
         
         if (usersError) {
@@ -137,6 +140,18 @@ export async function GET(request) {
         }
         
         return NextResponse.json(users || [])
+      
+      case 'available-employees':
+        const { data: employees, error: employeesError } = await supabase
+          .from('available_employees')
+          .select('*')
+          .order('first_name', { ascending: true })
+        
+        if (employeesError) {
+          return NextResponse.json({ error: employeesError.message }, { status: 500 })
+        }
+        
+        return NextResponse.json(employees || [])
       
       case 'ratings':
         const { data: ratings, error: ratingsError } = await supabase
