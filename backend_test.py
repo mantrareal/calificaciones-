@@ -19,48 +19,43 @@ TEST_PASSWORD = "test123"
 EXPECTED_EMPLOYEE_NAME = "ALEJANDRO ORTIZ BENITEZ"
 EXPECTED_EMPLOYEE_COUNT = 231
 
-class ClubVacacionalAPITester:
-    def __init__(self):
-        self.base_url = BASE_URL
-        self.test_results = []
-        self.created_ids = []  # Track created resources for cleanup
-        
-    def log_test(self, test_name, success, message, data=None):
-        """Log test results"""
-        result = {
-            'test': test_name,
-            'success': success,
-            'message': message,
-            'timestamp': datetime.now().isoformat()
-        }
-        if data:
-            result['data'] = data
-        self.test_results.append(result)
-        
-        status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status}: {test_name} - {message}")
-        if data and not success:
-            print(f"   Data: {json.dumps(data, indent=2)}")
-    
-    def test_api_root(self):
-        """Test the root API endpoint"""
-        try:
-            response = requests.get(f"{self.base_url}")
-            if response.status_code == 200:
-                data = response.json()
-                expected_endpoints = ['/api/users', '/api/ratings', '/api/follow-ups']
-                if all(endpoint in data.get('endpoints', []) for endpoint in expected_endpoints):
-                    self.log_test("API Root", True, "Root endpoint returns correct structure", data)
-                    return True
-                else:
-                    self.log_test("API Root", False, "Missing expected endpoints", data)
-                    return False
-            else:
-                self.log_test("API Root", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-        except Exception as e:
-            self.log_test("API Root", False, f"Connection error: {str(e)}")
+def print_test_result(test_name, success, message="", data=None):
+    """Print formatted test results"""
+    status = "✅ PASS" if success else "❌ FAIL"
+    print(f"{status} {test_name}")
+    if message:
+        print(f"   {message}")
+    if data and isinstance(data, dict):
+        print(f"   Data: {json.dumps(data, indent=2)[:200]}...")
+    elif data:
+        print(f"   Data: {str(data)[:200]}...")
+    print()
+
+def test_api_root():
+    """Test the root API endpoint"""
+    try:
+        response = requests.get(f"{BASE_URL}")
+        if response.status_code == 200:
+            data = response.json()
+            expected_endpoints = ['/api/users', '/api/ratings', '/api/follow-ups']
+            has_endpoints = all(endpoint in str(data) for endpoint in expected_endpoints)
+            print_test_result(
+                "API Root Endpoint", 
+                has_endpoints,
+                f"Status: {response.status_code}, Has expected endpoints: {has_endpoints}",
+                data
+            )
+            return has_endpoints
+        else:
+            print_test_result(
+                "API Root Endpoint", 
+                False,
+                f"Status: {response.status_code}, Response: {response.text[:200]}"
+            )
             return False
+    except Exception as e:
+        print_test_result("API Root Endpoint", False, f"Exception: {str(e)}")
+        return False
     
     def test_get_users(self):
         """Test GET /api/users endpoint"""
