@@ -249,27 +249,55 @@ export default function App() {
     }
   }
 
-  // Define rating categories based on role
-  const getLinerRatingCategories = () => [
-    'Saludo a prospectos',
-    'Turn Over con Gusto, Uso y Dinero',
-    'Xhare Rewards',
-    'Flyback',
-    'Life Styles Experiences 365',
-    'RCI',
-    'Prime Vacation',
-    'Signature Selection',
-    'Manejo de drops',
-    'Creación de calculadora vacacional'
-  ]
+  // Formularios específicos de evaluación
+  const getCloserRatingForm = () => ({
+    // Para cuando Liners califican Closers
+    yesNoQuestions: [
+      '¿Saludó a los prospectos?',
+      '¿Se te permitió hacer un Turn Over con Gusto, Uso y Dinero?',
+      '¿La calculadora vacacional fue creada y explicada por el closer?'
+    ],
+    starQuestions: {
+      explanation: [
+        'Xhare Rewards',
+        'Flyback', 
+        'Life Styles Experiences 365',
+        'RCI',
+        'Prime Vacation',
+        'Signature Selection'
+      ],
+      examples: [
+        'RCI',
+        'Prime Vacation', 
+        'Signature Selection'
+      ],
+      other: [
+        '¿En qué medida estás de acuerdo o en desacuerdo con los drops?'
+      ]
+    },
+    numberQuestions: [
+      '¿Cuántos drops hubo?'
+    ]
+  })
 
-  const getCloserRatingCategories = () => [
-    'Saludo a prospectos',
-    'Apoyo en explicación pasado/presente/futuro',
-    'Beneficios y diferenciadores',
-    'Uso del survey',
-    'Conexión entre prospectos y ejecutivos'
-  ]
+  const getLinerRatingForm = () => ({
+    // Para cuando Closers califican Liners/FTM/FTB  
+    yesNoQuestions: [
+      '¿Dieron valor a los parques?'
+    ],
+    starQuestions: {
+      explanation: [
+        'Pasado, presente y futuro',
+        'Beneficios y diferenciadores en hotel y parques'
+      ],
+      usage: [
+        '¿En qué medida estás de acuerdo o en desacuerdo con el uso del survey?'
+      ],
+      connection: [
+        '¿Cómo calificarías la conexión entre prospectos y ejecutivo de ventas?'
+      ]
+    }
+  })
 
   const getFilteredUsers = () => {
     if (!currentUser || !currentUser.available_employees) return []
