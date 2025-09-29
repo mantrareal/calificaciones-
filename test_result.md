@@ -241,6 +241,20 @@ test_plan:
   test_all: true
   test_priority: "high_first"
 
+  - task: "Login/Registration Issues Testing"
+    implemented: true
+    working: false
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL FINDINGS: 1) GET /api/users fails with 500 error due to missing database relationship between users and available_employees tables. 2) User prueba@test.com exists but cannot be retrieved. 3) Registration works correctly. 4) Available employees table has correct 231 records with ALEJANDRO ORTIZ BENITEZ. 5) Login fails because user data cannot be fetched. ROOT CAUSE: Missing foreign key relationship in Supabase schema prevents JOIN queries."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend API testing completed successfully. All 8 critical tests passed: Database connection, API root, GET/POST users, GET/POST ratings, GET/POST follow-ups, sample data verification, and data structure validation. Supabase connection working correctly with proper JSONB support. All sample users present with correct roles. Ready for frontend integration or production use."
+    - agent: "testing"
+      message: "CRITICAL ISSUE IDENTIFIED: Login and registration problems traced to missing database relationship. GET /api/users endpoint failing with 500 error: 'Could not find a relationship between users and available_employees in the schema cache'. The backend code attempts JOIN queries but foreign key relationship is not defined in Supabase. User prueba@test.com exists but is inaccessible. Registration works. Available employees table correct (231 records, ALEJANDRO found). SOLUTION NEEDED: Define foreign key relationship between users.employee_id and available_employees.id in Supabase database schema."
