@@ -12,290 +12,240 @@ from datetime import datetime
 # Use localhost since we're testing internally
 BASE_URL = "http://localhost:3000/api"
 
-def print_test_result(test_name, success, message="", data=None):
-    """Print formatted test results"""
-    status = "✅ PASS" if success else "❌ FAIL"
-    print(f"{status} {test_name}")
-    if message:
-        print(f"   {message}")
-    if data and isinstance(data, dict):
-        print(f"   Data: {json.dumps(data, indent=2)[:200]}...")
-    elif data:
-        print(f"   Data: {str(data)[:200]}...")
-    print()
-
-def test_api_root():
-    """Test the root API endpoint"""
-    try:
-        response = requests.get(f"{BASE_URL}")
-        if response.status_code == 200:
-            data = response.json()
-            expected_endpoints = ['/api/users', '/api/ratings', '/api/follow-ups']
-            has_endpoints = all(endpoint in str(data) for endpoint in expected_endpoints)
-            print_test_result(
-                "API Root Endpoint", 
-                has_endpoints,
-                f"Status: {response.status_code}, Has expected endpoints: {has_endpoints}",
-                data
-            )
-            return has_endpoints
-        else:
-            print_test_result(
-                "API Root Endpoint", 
-                False,
-                f"Status: {response.status_code}, Response: {response.text[:200]}"
-            )
-            return False
-    except Exception as e:
-        print_test_result("API Root Endpoint", False, f"Exception: {str(e)}")
-        return False
+def test_rating_submission_error():
+    """Test the specific rating submission error reported by user"""
+    print("=== Testing Rating Submission Error ===")
     
-def test_get_users():
-    """Test GET /api/users endpoint"""
-    try:
-        response = requests.get(f"{BASE_URL}/users")
-        if response.status_code == 200:
-            users = response.json()
-            print_test_result(
-                "GET /api/users", 
-                True,
-                f"Status: {response.status_code}, Users count: {len(users)}",
-                {"sample_users": users[:2] if users else []}
-            )
-            return users
-        else:
-            print_test_result(
-                "GET /api/users", 
-                False,
-                f"Status: {response.status_code}, Response: {response.text[:200]}"
-            )
-            return []
-    except Exception as e:
-        print_test_result("GET /api/users", False, f"Exception: {str(e)}")
-        return []
-    
-def test_get_available_employees():
-    """Test GET /api/available-employees endpoint"""
-    try:
-        response = requests.get(f"{BASE_URL}/available-employees")
-        if response.status_code == 200:
-            employees = response.json()
-            count = len(employees)
-            expected_count_met = count == EXPECTED_EMPLOYEE_COUNT
-            
-            # Look for ALEJANDRO ORTIZ BENITEZ
-            alejandro_found = False
-            alejandro_data = None
-            for emp in employees:
-                full_name = f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip().upper()
-                if EXPECTED_EMPLOYEE_NAME.upper() in full_name:
-                    alejandro_found = True
-                    alejandro_data = emp
-                    break
-            
-            print_test_result(
-                "GET /api/available-employees", 
-                True,
-                f"Status: {response.status_code}, Employees count: {count} (expected: {EXPECTED_EMPLOYEE_COUNT}), Alejandro found: {alejandro_found}",
-                {"count": count, "alejandro": alejandro_data, "sample": employees[:2] if employees else []}
-            )
-            return employees, alejandro_found, alejandro_data
-        else:
-            print_test_result(
-                "GET /api/available-employees", 
-                False,
-                f"Status: {response.status_code}, Response: {response.text[:200]}"
-            )
-            return [], False, None
-    except Exception as e:
-        print_test_result("GET /api/available-employees", False, f"Exception: {str(e)}")
-        return [], False, None
-
-def test_user_exists(users, email):
-    """Check if a specific user exists in the users list"""
-    user_found = False
-    user_data = None
-    
-    for user in users:
-        if user.get('email', '').lower() == email.lower():
-            user_found = True
-            user_data = user
-            break
-    
-    print_test_result(
-        f"User {email} exists", 
-        user_found,
-        f"User found: {user_found}",
-        user_data
-    )
-    return user_found, user_data
-
-def test_user_employee_relationship(user_data):
-    """Test if user is properly linked to employee data"""
-    if not user_data:
-        print_test_result("User-Employee Relationship", False, "No user data provided")
-        return False
-    
-    has_employee_data = 'available_employees' in user_data and user_data['available_employees'] is not None
-    employee_name = ""
-    
-    if has_employee_data:
-        emp = user_data['available_employees']
-        employee_name = f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip()
-        is_alejandro = EXPECTED_EMPLOYEE_NAME.upper() in employee_name.upper()
-    else:
-        is_alejandro = False
-    
-    print_test_result(
-        "User-Employee Relationship", 
-        has_employee_data and is_alejandro,
-        f"Has employee data: {has_employee_data}, Employee: {employee_name}, Is Alejandro: {is_alejandro}",
-        user_data.get('available_employees') if has_employee_data else None
-    )
-    return has_employee_data and is_alejandro
-
-def test_registration_flow(employees, alejandro_data):
-    """Test user registration flow"""
-    if not alejandro_data:
-        print_test_result("Registration Flow", False, "Alejandro employee data not found for registration test")
-        return False
-    
-    # Test registration payload
-    registration_data = {
-        "email": "test_registration@test.com",
-        "employee_id": alejandro_data.get('id')
+    # Test data structure from the review request
+    new_rating_data = {
+        "evaluator_id": "avail_40196",
+        "evaluated_id": "avail_68891", 
+        "other_employee_name": None,
+        "ratings_json": {
+            "stars": {"explanation_Xhare Rewards": 4},
+            "yesNo": {"¿Saludó a los prospectos?": True},
+            "numbers": {"¿Cuántos drops hubo?": 2}
+        },
+        "comments": "Test comment",
+        "date": "2025-01-29"
     }
     
+    print(f"Testing POST {BASE_URL}/ratings with new data structure...")
+    print(f"Data being sent: {json.dumps(new_rating_data, indent=2)}")
+    
     try:
-        response = requests.post(
-            f"{BASE_URL}/users",
-            headers={'Content-Type': 'application/json'},
-            json=registration_data
-        )
+        response = requests.post(f"{BASE_URL}/ratings", json=new_rating_data, timeout=10)
+        print(f"Response Status: {response.status_code}")
+        print(f"Response Headers: {dict(response.headers)}")
         
         if response.status_code == 200:
-            new_user = response.json()
-            print_test_result(
-                "Registration Flow", 
-                True,
-                f"Status: {response.status_code}, User created successfully",
-                new_user
-            )
+            result = response.json()
+            print("✅ SUCCESS: Rating submitted successfully")
+            print(f"Response: {json.dumps(result, indent=2)}")
             return True
         else:
-            print_test_result(
-                "Registration Flow", 
-                False,
-                f"Status: {response.status_code}, Response: {response.text[:200]}"
-            )
+            print("❌ FAILED: Rating submission failed")
+            try:
+                error_data = response.json()
+                print(f"Error Response: {json.dumps(error_data, indent=2)}")
+            except:
+                print(f"Raw Error Response: {response.text}")
             return False
-    except Exception as e:
-        print_test_result("Registration Flow", False, f"Exception: {str(e)}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"❌ REQUEST ERROR: {str(e)}")
         return False
 
-def test_login_simulation(users):
-    """Simulate login by checking if user exists (since there's no password auth)"""
-    user_found, user_data = test_user_exists(users, TEST_EMAIL)
+def test_rating_with_other_employee():
+    """Test rating submission with 'other' employee"""
+    print("\n=== Testing Rating with 'Other' Employee ===")
     
-    if user_found:
-        # Check if user has proper employee relationship
-        has_relationship = test_user_employee_relationship(user_data)
-        print_test_result(
-            "Login Simulation", 
-            has_relationship,
-            f"User found and has proper employee relationship: {has_relationship}"
-        )
-        return has_relationship
-    else:
-        print_test_result(
-            "Login Simulation", 
-            False,
-            f"User {TEST_EMAIL} not found in database"
-        )
+    other_rating_data = {
+        "evaluator_id": "avail_40196",
+        "evaluated_id": "other", 
+        "other_employee_name": "External Employee Name",
+        "ratings_json": {
+            "stars": {"explanation_Xhare Rewards": 3},
+            "yesNo": {"¿Saludó a los prospectos?": False},
+            "numbers": {"¿Cuántos drops hubo?": 5}
+        },
+        "comments": "Rating for external employee",
+        "date": "2025-01-29"
+    }
+    
+    print(f"Testing POST {BASE_URL}/ratings with 'other' employee...")
+    print(f"Data being sent: {json.dumps(other_rating_data, indent=2)}")
+    
+    try:
+        response = requests.post(f"{BASE_URL}/ratings", json=other_rating_data, timeout=10)
+        print(f"Response Status: {response.status_code}")
+        
+        if response.status_code == 200:
+            result = response.json()
+            print("✅ SUCCESS: Rating with 'other' employee submitted successfully")
+            print(f"Response: {json.dumps(result, indent=2)}")
+            return True
+        else:
+            print("❌ FAILED: Rating with 'other' employee failed")
+            try:
+                error_data = response.json()
+                print(f"Error Response: {json.dumps(error_data, indent=2)}")
+            except:
+                print(f"Raw Error Response: {response.text}")
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"❌ REQUEST ERROR: {str(e)}")
         return False
+
+def test_database_schema_compatibility():
+    """Test if the database schema can handle the new rating structure"""
+    print("\n=== Testing Database Schema Compatibility ===")
     
-def test_database_integrity():
-    """Test overall database integrity"""
+    # First, let's check existing ratings to see current structure
+    try:
+        response = requests.get(f"{BASE_URL}/ratings", timeout=10)
+        print(f"GET /ratings Status: {response.status_code}")
+        
+        if response.status_code == 200:
+            ratings = response.json()
+            print(f"✅ Successfully retrieved {len(ratings)} existing ratings")
+            
+            if ratings:
+                print("Sample existing rating structure:")
+                print(json.dumps(ratings[0], indent=2))
+            else:
+                print("No existing ratings found")
+            return True
+        else:
+            print("❌ FAILED: Could not retrieve existing ratings")
+            try:
+                error_data = response.json()
+                print(f"Error Response: {json.dumps(error_data, indent=2)}")
+            except:
+                print(f"Raw Error Response: {response.text}")
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"❌ REQUEST ERROR: {str(e)}")
+        return False
+
+def test_api_endpoint_availability():
+    """Test if the ratings API endpoint is available"""
+    print("\n=== Testing API Endpoint Availability ===")
+    
+    try:
+        # Test root API endpoint
+        response = requests.get(BASE_URL, timeout=10)
+        print(f"GET {BASE_URL} Status: {response.status_code}")
+        
+        if response.status_code == 200:
+            result = response.json()
+            print("✅ API root endpoint working")
+            print(f"Available endpoints: {result.get('endpoints', [])}")
+            
+            # Check if ratings endpoint is listed
+            if '/api/ratings' in result.get('endpoints', []):
+                print("✅ Ratings endpoint is listed in available endpoints")
+                return True
+            else:
+                print("❌ Ratings endpoint not listed in available endpoints")
+                return False
+        else:
+            print("❌ FAILED: API root endpoint not working")
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"❌ REQUEST ERROR: {str(e)}")
+        return False
+
+def test_simple_rating_structure():
+    """Test with a simpler rating structure to isolate the issue"""
+    print("\n=== Testing Simple Rating Structure ===")
+    
+    simple_rating_data = {
+        "evaluator_id": "test_evaluator",
+        "evaluated_id": "test_evaluated", 
+        "ratings_json": {
+            "overall": 5
+        },
+        "comments": "Simple test",
+        "date": "2025-01-29"
+    }
+    
+    print(f"Testing POST {BASE_URL}/ratings with simple structure...")
+    print(f"Data being sent: {json.dumps(simple_rating_data, indent=2)}")
+    
+    try:
+        response = requests.post(f"{BASE_URL}/ratings", json=simple_rating_data, timeout=10)
+        print(f"Response Status: {response.status_code}")
+        
+        if response.status_code == 200:
+            result = response.json()
+            print("✅ SUCCESS: Simple rating submitted successfully")
+            print(f"Response: {json.dumps(result, indent=2)}")
+            return True
+        else:
+            print("❌ FAILED: Simple rating submission failed")
+            try:
+                error_data = response.json()
+                print(f"Error Response: {json.dumps(error_data, indent=2)}")
+            except:
+                print(f"Raw Error Response: {response.text}")
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"❌ REQUEST ERROR: {str(e)}")
+        return False
+
+def main():
+    """Run all rating submission tests"""
+    print("Starting Club Vacacional Rating System Backend Tests")
     print("=" * 60)
-    print("CLUB VACACIONAL BACKEND TESTING")
-    print("=" * 60)
-    print(f"Testing against: {BASE_URL}")
-    print(f"Test user: {TEST_EMAIL}")
-    print(f"Expected employee: {EXPECTED_EMPLOYEE_NAME}")
-    print(f"Expected employee count: {EXPECTED_EMPLOYEE_COUNT}")
-    print("=" * 60)
-    print()
     
-    # Test API endpoints
-    api_working = test_api_root()
+    test_results = []
     
-    # Test users endpoint
-    users = test_get_users()
+    # Test 1: API endpoint availability
+    test_results.append(("API Endpoint Availability", test_api_endpoint_availability()))
     
-    # Test available employees endpoint
-    employees, alejandro_found, alejandro_data = test_get_available_employees()
+    # Test 2: Database schema compatibility
+    test_results.append(("Database Schema Compatibility", test_database_schema_compatibility()))
     
-    # Test if prueba@test.com user exists
-    user_found, user_data = test_user_exists(users, TEST_EMAIL)
+    # Test 3: Simple rating structure (baseline test)
+    test_results.append(("Simple Rating Structure", test_simple_rating_structure()))
     
-    # Test user-employee relationship
-    if user_found:
-        relationship_ok = test_user_employee_relationship(user_data)
-    else:
-        relationship_ok = False
+    # Test 4: Rating submission with new structure
+    test_results.append(("Rating Submission (New Structure)", test_rating_submission_error()))
     
-    # Test registration flow
-    registration_ok = test_registration_flow(employees, alejandro_data)
-    
-    # Test login simulation
-    login_ok = test_login_simulation(users)
+    # Test 5: Rating with 'other' employee
+    test_results.append(("Rating with 'Other' Employee", test_rating_with_other_employee()))
     
     # Summary
-    print("=" * 60)
+    print("\n" + "=" * 60)
     print("TEST SUMMARY")
     print("=" * 60)
     
-    issues_found = []
+    passed = 0
+    failed = 0
     
-    if not api_working:
-        issues_found.append("API root endpoint not working properly")
+    for test_name, result in test_results:
+        status = "✅ PASSED" if result else "❌ FAILED"
+        print(f"{test_name}: {status}")
+        if result:
+            passed += 1
+        else:
+            failed += 1
     
-    if len(employees) != EXPECTED_EMPLOYEE_COUNT:
-        issues_found.append(f"Available employees count mismatch: found {len(employees)}, expected {EXPECTED_EMPLOYEE_COUNT}")
+    print(f"\nTotal Tests: {len(test_results)}")
+    print(f"Passed: {passed}")
+    print(f"Failed: {failed}")
     
-    if not alejandro_found:
-        issues_found.append(f"Employee {EXPECTED_EMPLOYEE_NAME} not found in available_employees table")
-    
-    if not user_found:
-        issues_found.append(f"Test user {TEST_EMAIL} not found in users table")
-    
-    if user_found and not relationship_ok:
-        issues_found.append(f"User {TEST_EMAIL} exists but not properly linked to employee {EXPECTED_EMPLOYEE_NAME}")
-    
-    if not registration_ok:
-        issues_found.append("Registration flow not working properly")
-    
-    if not login_ok:
-        issues_found.append(f"Login with {TEST_EMAIL} not working properly")
-    
-    if issues_found:
-        print("❌ CRITICAL ISSUES FOUND:")
-        for i, issue in enumerate(issues_found, 1):
-            print(f"   {i}. {issue}")
+    if failed > 0:
+        print("\n❌ CRITICAL ISSUES FOUND - Rating submission is not working properly")
+        sys.exit(1)
     else:
-        print("✅ ALL TESTS PASSED - No critical issues found")
-    
-    print()
-    print("DETAILED FINDINGS:")
-    print(f"   • API endpoints working: {api_working}")
-    print(f"   • Users in database: {len(users)}")
-    print(f"   • Available employees: {len(employees)}")
-    print(f"   • Test user exists: {user_found}")
-    print(f"   • Employee relationship OK: {relationship_ok}")
-    print(f"   • Registration working: {registration_ok}")
-    print(f"   • Login simulation OK: {login_ok}")
-    
-    return len(issues_found) == 0
-    
+        print("\n✅ ALL TESTS PASSED - Rating system working correctly")
+        sys.exit(0)
+
 if __name__ == "__main__":
-    test_database_integrity()
+    main()
