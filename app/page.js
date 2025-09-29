@@ -28,12 +28,12 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null)
   const [view, setView] = useState('login') // login, register, dashboard, rate-closer, rate-liner, my-ratings, follow-up
   const [users, setUsers] = useState([])
+  const [availableEmployees, setAvailableEmployees] = useState([])
   const [ratings, setRatings] = useState([])
   const [myRatings, setMyRatings] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [rankings, setRankings] = useState([])
-  const [managementStats, setManagementStats] = useState(null)
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
 
   // Login/Register state
   const [email, setEmail] = useState('')
