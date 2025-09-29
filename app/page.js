@@ -926,13 +926,236 @@ export default function App() {
     </div>
   )
 
+  // Función para calcular promedio de calificaciones
+  const calculateEmployeeAverage = (employeeId) => {
+    const employeeRatings = ratings.filter(r => r.evaluated_id === employeeId)
+    if (employeeRatings.length === 0) return 0
+    
+    let totalScore = 0
+    let totalQuestions = 0
+    
+    employeeRatings.forEach(rating => {
+      if (rating.ratings_json?.stars) {
+        const starValues = Object.values(rating.ratings_json.stars).filter(v => typeof v === 'number')
+        totalScore += starValues.reduce((sum, val) => sum + val, 0)
+        totalQuestions += starValues.length
+      }
+    })
+    
+    return totalQuestions > 0 ? (totalScore / totalQuestions) : 0
+  }
+
+  // Dashboard Gerencial
+  const renderManagerDashboard = () => {
+    // Calcular estadísticas por rol
+    const roleStats = {
+      closer: { employees: [], ratings: 0, avgScore: 0 },
+      liner: { employees: [], ratings: 0, avgScore: 0 },
+      ftb: { employees: [], ratings: 0, avgScore: 0 },
+      ftm: { employees: [], ratings: 0, avgScore: 0 },
+      ftm_ftb: { employees: [], ratings: 0, avgScore: 0 }
+    }
+
+    // Agrupar empleados por rol y calcular promedios
+    availableEmployees.forEach(employee => {
+      if (roleStats[employee.role]) {
+        const avgScore = calculateEmployeeAverage(employee.id)
+        const employeeRatings = ratings.filter(r => r.evaluated_id === employee.id)
+        
+        roleStats[employee.role].employees.push({
+          ...employee,
+          avgScore,
+          ratingsCount: employeeRatings.length
+        })
+        roleStats[employee.role].ratings += employeeRatings.length
+      }
+    })
+
+    // Calcular promedio general por rol
+    Object.keys(roleStats).forEach(role => {
+      const validEmployees = roleStats[role].employees.filter(emp => emp.ratingsCount > 0)
+      roleStats[role].avgScore = validEmployees.length > 0 
+        ? validEmployees.reduce((sum, emp) => sum + emp.avgScore, 0) / validEmployees.length 
+        : 0
+    })
+
+    // Top 5 mejores y peores por rol
+    const getTopPerformers = (roleEmployees, isTop = true) => {
+      return roleEmployees
+        .filter(emp => emp.ratingsCount > 0)
+        .sort((a, b) => isTop ? b.avgScore - a.avgScore : a.avgScore - b.avgScore)
+        .slice(0, 5)
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Dashboard Gerencial</h2>
+          <Button onClick={() => setView('dashboard')} variant="outline">
+            Volver
+          </Button>
+        </div>
+
+        {/* Resumen General */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {Object.entries(roleStats).map(([role, stats]) => (
+            <Card key={role}>
+              <CardContent className="p-4 text-center">
+                <h3 className="font-semibold text-sm uppercase tracking-wide text-gray-600 mb-2">
+                  {role === 'ftm_ftb' ? 'FTM/FTB' : role}
+                </h3>
+                <div className="space-y-1">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {stats.employees.length}
+                  </div>
+                  <div className="text-xs text-gray-500">Empleados</div>
+                  <div className="text-lg font-semibold text-green-600">
+                    {stats.avgScore.toFixed(1)}/5
+                  </div>
+                  <div className="text-xs text-gray-500">Promedio</div>
+                  <div className="text-sm text-gray-600">
+                    {stats.ratings} calificaciones
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Top 5 Mejores Empleados */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center">
+              <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
+              Top 5 Mejores Empleados (General)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {availableEmployees
+                .map(emp => ({ ...emp, avgScore: calculateEmployeeAverage(emp.id), ratingsCount: ratings.filter(r => r.evaluated_id === emp.id).length }))
+                .filter(emp => emp.ratingsCount > 0)
+                .sort((a, b) => b.avgScore - a.avgScore)
+                .slice(0, 5)
+                .map((employee, index) => (
+                  <div key={employee.id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className="font-medium">{employee.first_name} {employee.last_name}</div>
+                        <div className="text-sm text-gray-600">#{employee.employee_number} • {employee.role.toUpperCase()}</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-green-600">{employee.avgScore.toFixed(1)}/5</div>
+                      <div className="text-xs text-gray-500">{employee.ratingsCount} evaluaciones</div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top 5 Peores Empleados */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center">
+              <TrendingUp className="h-5 w-5 mr-2 text-red-600 rotate-180" />
+              Top 5 Empleados que Necesitan Mejora
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {availableEmployees
+                .map(emp => ({ ...emp, avgScore: calculateEmployeeAverage(emp.id), ratingsCount: ratings.filter(r => r.evaluated_id === emp.id).length }))
+                .filter(emp => emp.ratingsCount > 0)
+                .sort((a, b) => a.avgScore - b.avgScore)
+                .slice(0, 5)
+                .map((employee, index) => (
+                  <div key={employee.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className="font-medium">{employee.first_name} {employee.last_name}</div>
+                        <div className="text-sm text-gray-600">#{employee.employee_number} • {employee.role.toUpperCase()}</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-red-600">{employee.avgScore.toFixed(1)}/5</div>
+                      <div className="text-xs text-gray-500">{employee.ratingsCount} evaluaciones</div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Detalle por Roles */}
+        {Object.entries(roleStats).map(([role, stats]) => {
+          const topPerformers = getTopPerformers(stats.employees, true)
+          const needImprovement = getTopPerformers(stats.employees, false)
+          
+          if (stats.employees.length === 0) return null
+          
+          return (
+            <Card key={`detail-${role}`}>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  Detalle: {role === 'ftm_ftb' ? 'FTM/FTB' : role.toUpperCase()}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-green-600 mb-3">Mejores {role}s</h4>
+                    <div className="space-y-2">
+                      {topPerformers.map((emp, index) => (
+                        <div key={emp.id} className="flex justify-between items-center p-2 bg-green-50 rounded">
+                          <span className="text-sm">{emp.first_name} {emp.last_name}</span>
+                          <span className="font-semibold text-green-600">{emp.avgScore.toFixed(1)}/5</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-red-600 mb-3">Necesitan Mejora</h4>
+                    <div className="space-y-2">
+                      {needImprovement.map((emp, index) => (
+                        <div key={emp.id} className="flex justify-between items-center p-2 bg-red-50 rounded">
+                          <span className="text-sm">{emp.first_name} {emp.last_name}</span>
+                          <span className="font-semibold text-red-600">{emp.avgScore.toFixed(1)}/5</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+    )
+  }
+
   const renderAllRatings = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Todas las Calificaciones</h2>
-        <Button onClick={() => setView('dashboard')} variant="outline">
-          Volver
-        </Button>
+        <div>
+          <h2 className="text-2xl font-bold">Calificaciones Detalladas</h2>
+          <p className="text-gray-600">Vista detallada de todas las evaluaciones</p>
+        </div>
+        <div className="space-x-2">
+          <Button onClick={() => setView('manager-dashboard')} variant="outline">
+            Dashboard
+          </Button>
+          <Button onClick={() => setView('dashboard')} variant="outline">
+            Volver
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -940,31 +1163,80 @@ export default function App() {
           const evaluatorEmployee = availableEmployees.find(emp => emp.id === rating.evaluator_id)
           const evaluatedEmployee = availableEmployees.find(emp => emp.id === rating.evaluated_id)
           
+          // Procesar datos para mostrar de forma legible
+          const ratingData = rating.ratings_json || {}
+          const starRatings = ratingData.stars || {}
+          const yesNoAnswers = ratingData.yesNo || {}
+          const numberAnswers = ratingData.numbers || {}
+          
           return (
             <Card key={rating.id || index}>
               <CardHeader>
                 <CardTitle className="text-lg">
-                  Calificación #{index + 1}
+                  Evaluación #{index + 1}
                 </CardTitle>
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p><strong>Evaluador:</strong> {evaluatorEmployee ? `${evaluatorEmployee.first_name} ${evaluatorEmployee.last_name} (#${evaluatorEmployee.employee_number})` : 'Desconocido'}</p>
-                  <p><strong>Evaluado:</strong> {rating.other_employee_name || (evaluatedEmployee ? `${evaluatedEmployee.first_name} ${evaluatedEmployee.last_name} (#${evaluatedEmployee.employee_number})` : 'Desconocido')}</p>
+                  <p><strong>Evaluador:</strong> {evaluatorEmployee ? `${evaluatorEmployee.first_name} ${evaluatorEmployee.last_name} (#${evaluatorEmployee.employee_number}) - ${evaluatorEmployee.role.toUpperCase()}` : 'Desconocido'}</p>
+                  <p><strong>Evaluado:</strong> {rating.other_employee_name || (evaluatedEmployee ? `${evaluatedEmployee.first_name} ${evaluatedEmployee.last_name} (#${evaluatedEmployee.employee_number}) - ${evaluatedEmployee.role.toUpperCase()}` : 'Desconocido')}</p>
                   <p><strong>Fecha:</strong> {new Date(rating.date || rating.created_at).toLocaleDateString()}</p>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <strong className="text-sm">Datos guardados:</strong>
-                    <pre className="text-xs bg-gray-100 p-2 rounded mt-1 overflow-auto">
-                      {JSON.stringify(rating.ratings_json, null, 2)}
-                    </pre>
-                  </div>
+                <div className="space-y-4">
+                  {/* Respuestas Sí/No */}
+                  {Object.keys(yesNoAnswers).length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-2">Respuestas Sí/No:</h4>
+                      <div className="space-y-1">
+                        {Object.entries(yesNoAnswers).map(([question, answer]) => (
+                          <div key={question} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                            <span className="text-sm">{question}</span>
+                            <span className={`font-semibold ${answer ? 'text-green-600' : 'text-red-600'}`}>
+                              {answer ? 'Sí' : 'No'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Calificaciones con estrellas */}
+                  {Object.keys(starRatings).length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-2">Calificaciones (1-5 estrellas):</h4>
+                      <div className="space-y-1">
+                        {Object.entries(starRatings).map(([category, rating]) => (
+                          <div key={category} className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                            <span className="text-sm">{category.replace('explanation_', '').replace('examples_', '').replace('other_', '').replace('usage_', '').replace('connection_', '')}</span>
+                            <div className="flex items-center space-x-1">
+                              <StarRating rating={rating} readonly size={16} />
+                              <span className="text-sm font-semibold">({rating}/5)</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Respuestas numéricas */}
+                  {Object.keys(numberAnswers).length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-2">Respuestas Numéricas:</h4>
+                      <div className="space-y-1">
+                        {Object.entries(numberAnswers).map(([question, answer]) => (
+                          <div key={question} className="flex justify-between items-center p-2 bg-yellow-50 rounded">
+                            <span className="text-sm">{question}</span>
+                            <span className="font-semibold text-yellow-600">{answer}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   {rating.comments && (
                     <div>
-                      <strong className="text-sm">Comentarios:</strong>
-                      <p className="text-sm text-gray-600 mt-1">{rating.comments}</p>
+                      <h4 className="font-semibold text-gray-800 mb-2">Comentarios:</h4>
+                      <p className="text-sm text-gray-600 p-2 bg-gray-50 rounded">{rating.comments}</p>
                     </div>
                   )}
                 </div>
