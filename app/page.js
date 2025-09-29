@@ -304,10 +304,18 @@ export default function App() {
       <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
         <Card className="w-full max-w-md glass-card border-white/20">
           <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_resort-feedback/artifacts/wqsdo1yo_pururialogotransparente.png" 
+                alt="PURURU Logo" 
+                className="h-16 w-auto"
+              />
+            </div>
             <CardTitle className="text-2xl font-bold text-white">
               Club Vacacional
             </CardTitle>
             <p className="text-white/80">Sistema de Calificación</p>
+            <p className="text-white/60 text-xs mt-2">Powered by PURURU</p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex space-x-2 mb-4">
