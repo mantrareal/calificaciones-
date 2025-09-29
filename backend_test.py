@@ -1,23 +1,16 @@
 #!/usr/bin/env python3
 """
-Club Vacacional Backend Testing Script
-Tests login, registration, and database issues as reported in the review request.
+Backend API Testing for Club Vacacional Rating System
+Testing the rating submission error with new data structure
 """
 
 import requests
 import json
 import sys
-import os
 from datetime import datetime
 
-# Get base URL from environment - using localhost for testing
+# Use localhost since we're testing internally
 BASE_URL = "http://localhost:3000/api"
-
-# Test configuration
-TEST_EMAIL = "prueba@test.com"
-TEST_PASSWORD = "test123"
-EXPECTED_EMPLOYEE_NAME = "ALEJANDRO ORTIZ BENITEZ"
-EXPECTED_EMPLOYEE_COUNT = 231
 
 def print_test_result(test_name, success, message="", data=None):
     """Print formatted test results"""
