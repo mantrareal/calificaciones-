@@ -1075,6 +1075,7 @@ export default function App() {
         {(view === 'rate-closer' || view === 'rate-liner') && renderRatingForm()}
         {view === 'my-ratings' && renderMyRatings()}
         {view === 'follow-up' && renderFollowUp()}
+        {view === 'all-ratings' && renderAllRatings()}
       </main>
 
       <footer className="bg-gray-50 border-t">
