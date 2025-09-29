@@ -10,8 +10,8 @@ import sys
 import os
 from datetime import datetime
 
-# Get base URL from environment - using external URL for testing
-BASE_URL = "https://hadfdgbyxhbqgjycbftv.supabase.co/api"
+# Get base URL from environment - using localhost for testing
+BASE_URL = "http://localhost:3000/api"
 
 # Test configuration
 TEST_EMAIL = "prueba@test.com"
