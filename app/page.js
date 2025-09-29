@@ -456,7 +456,7 @@ export default function App() {
           </>
         )}
 
-        {currentUser.role === 'liner' && (
+        {currentUser.available_employees?.role === 'liner' && (
           <Card className="cursor-pointer hover:shadow-lg transition-shadow">
             <CardContent className="p-6 text-center">
               <div className="mb-4">
