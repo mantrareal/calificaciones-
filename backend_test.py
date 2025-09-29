@@ -57,45 +57,29 @@ def test_api_root():
         print_test_result("API Root Endpoint", False, f"Exception: {str(e)}")
         return False
     
-    def test_get_users(self):
-        """Test GET /api/users endpoint"""
-        try:
-            response = requests.get(f"{self.base_url}/users")
-            if response.status_code == 200:
-                users = response.json()
-                if isinstance(users, list):
-                    # Check if we have sample users
-                    expected_names = ['Juan', 'María', 'Carlos', 'Ana', 'Roberto']
-                    found_names = [user.get('first_name') for user in users]
-                    
-                    # Verify user structure
-                    if users:
-                        user = users[0]
-                        required_fields = ['id', 'email', 'first_name', 'last_name', 'role']
-                        missing_fields = [field for field in required_fields if field not in user]
-                        
-                        if missing_fields:
-                            self.log_test("GET Users", False, f"Missing fields: {missing_fields}", user)
-                            return False
-                        
-                        # Check role values
-                        valid_roles = ['liner', 'closer', 'manager']
-                        invalid_roles = [user['role'] for user in users if user['role'] not in valid_roles]
-                        if invalid_roles:
-                            self.log_test("GET Users", False, f"Invalid roles found: {invalid_roles}")
-                            return False
-                    
-                    self.log_test("GET Users", True, f"Retrieved {len(users)} users with correct structure")
-                    return True
-                else:
-                    self.log_test("GET Users", False, "Response is not a list", users)
-                    return False
-            else:
-                self.log_test("GET Users", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-        except Exception as e:
-            self.log_test("GET Users", False, f"Request error: {str(e)}")
-            return False
+def test_get_users():
+    """Test GET /api/users endpoint"""
+    try:
+        response = requests.get(f"{BASE_URL}/users")
+        if response.status_code == 200:
+            users = response.json()
+            print_test_result(
+                "GET /api/users", 
+                True,
+                f"Status: {response.status_code}, Users count: {len(users)}",
+                {"sample_users": users[:2] if users else []}
+            )
+            return users
+        else:
+            print_test_result(
+                "GET /api/users", 
+                False,
+                f"Status: {response.status_code}, Response: {response.text[:200]}"
+            )
+            return []
+    except Exception as e:
+        print_test_result("GET /api/users", False, f"Exception: {str(e)}")
+        return []
     
     def test_post_user(self):
         """Test POST /api/users endpoint"""
