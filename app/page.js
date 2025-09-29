@@ -340,13 +340,13 @@ export default function App() {
     return ratableEmployees
   }
 
-  const getRatingCategories = () => {
+  const getCurrentRatingForm = () => {
     if (view === 'rate-closer') {
-      return getLinerRatingCategories()
+      return getCloserRatingForm() // Liners califican Closers
     } else if (view === 'rate-liner') {
-      return getCloserRatingCategories()
+      return getLinerRatingForm() // Closers califican Liners/FTM/FTB
     }
-    return []
+    return null
   }
 
   if (!currentUser) {
