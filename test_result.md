@@ -236,10 +236,15 @@ metadata:
 
 test_plan:
   current_focus:
-    - "All backend API endpoints tested and working"
-  stuck_tasks: []
-  test_all: true
-  test_priority: "high_first"
+    - "Database Schema Relationships"
+    - "GET /api/users endpoint fix"
+    - "Login functionality restoration"
+  stuck_tasks: 
+    - "Database Schema Relationships"
+    - "GET /api/users"
+    - "Login Functionality"
+  test_all: false
+  test_priority: "stuck_first"
 
   - task: "Login/Registration Issues Testing"
     implemented: true
