@@ -151,15 +151,20 @@ export default function App() {
   }
 
   const submitRating = async () => {
-    if (!selectedUserId) {
-      alert('Por favor selecciona un usuario para calificar')
+    if (!selectedUserId && !otherEmployeeName) {
+      alert('Por favor selecciona un usuario o escribe un nombre en "Otros"')
       return
     }
 
     const ratingPayload = {
-      evaluator_id: currentUser.id,
-      evaluated_id: selectedUserId,
-      ratings_json: ratingData,
+      evaluator_id: currentUser.available_employees.id,
+      evaluated_id: selectedUserId || 'other',
+      other_employee_name: otherEmployeeName || null,
+      ratings_json: {
+        stars: ratingData,
+        yesNo: yesNoAnswers,
+        numbers: numberAnswers
+      },
       comments,
       date: new Date().toISOString().split('T')[0]
     }
@@ -175,7 +180,10 @@ export default function App() {
         alert('Calificación enviada exitosamente!')
         setSelectedUserId('')
         setRatingData({})
+        setYesNoAnswers({})
+        setNumberAnswers({})
         setComments('')
+        setOtherEmployeeName('')
         setView('dashboard')
         fetchData()
       } else {
