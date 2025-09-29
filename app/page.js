@@ -284,13 +284,15 @@ export default function App() {
     } else if (myRole === 'closer') {
       targetRoles = ['liner', 'ftb', 'ftm', 'ftm_ftb']
     } else if (myRole === 'ftb' || myRole === 'ftm' || myRole === 'ftm_ftb') {
-      targetRoles = ['liner']
+      targetRoles = ['closer']
+    } else if (myRole === 'manager') {
+      targetRoles = ['closer', 'liner', 'ftb', 'ftm', 'ftm_ftb'] // Managers can see all
     }
     
     // Filter available employees by target roles and exclude self
+    // Show ALL employees of target roles, not just registered ones
     const ratableEmployees = availableEmployees.filter(emp => 
       targetRoles.includes(emp.role) && 
-      emp.is_taken && 
       emp.id !== currentUser.available_employees.id
     )
     
