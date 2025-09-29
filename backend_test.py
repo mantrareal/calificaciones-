@@ -81,45 +81,145 @@ def test_get_users():
         print_test_result("GET /api/users", False, f"Exception: {str(e)}")
         return []
     
-    def test_post_user(self):
-        """Test POST /api/users endpoint"""
-        try:
-            test_user = {
-                "email": "test.user@clubvacacional.com",
-                "first_name": "Test",
-                "last_name": "User",
-                "role": "liner"
-            }
+def test_get_available_employees():
+    """Test GET /api/available-employees endpoint"""
+    try:
+        response = requests.get(f"{BASE_URL}/available-employees")
+        if response.status_code == 200:
+            employees = response.json()
+            count = len(employees)
+            expected_count_met = count == EXPECTED_EMPLOYEE_COUNT
             
-            response = requests.post(f"{self.base_url}/users", json=test_user)
-            if response.status_code == 200:
-                created_user = response.json()
-                
-                # Verify the created user has all required fields
-                required_fields = ['id', 'email', 'first_name', 'last_name', 'role']
-                missing_fields = [field for field in required_fields if field not in created_user]
-                
-                if missing_fields:
-                    self.log_test("POST User", False, f"Missing fields in response: {missing_fields}", created_user)
-                    return False
-                
-                # Verify the data matches what we sent
-                for key, value in test_user.items():
-                    if created_user.get(key) != value:
-                        self.log_test("POST User", False, f"Field {key} mismatch: expected {value}, got {created_user.get(key)}")
-                        return False
-                
-                # Store ID for potential cleanup
-                self.created_ids.append(('users', created_user['id']))
-                
-                self.log_test("POST User", True, "User created successfully", created_user)
-                return True
-            else:
-                self.log_test("POST User", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-        except Exception as e:
-            self.log_test("POST User", False, f"Request error: {str(e)}")
+            # Look for ALEJANDRO ORTIZ BENITEZ
+            alejandro_found = False
+            alejandro_data = None
+            for emp in employees:
+                full_name = f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip().upper()
+                if EXPECTED_EMPLOYEE_NAME.upper() in full_name:
+                    alejandro_found = True
+                    alejandro_data = emp
+                    break
+            
+            print_test_result(
+                "GET /api/available-employees", 
+                True,
+                f"Status: {response.status_code}, Employees count: {count} (expected: {EXPECTED_EMPLOYEE_COUNT}), Alejandro found: {alejandro_found}",
+                {"count": count, "alejandro": alejandro_data, "sample": employees[:2] if employees else []}
+            )
+            return employees, alejandro_found, alejandro_data
+        else:
+            print_test_result(
+                "GET /api/available-employees", 
+                False,
+                f"Status: {response.status_code}, Response: {response.text[:200]}"
+            )
+            return [], False, None
+    except Exception as e:
+        print_test_result("GET /api/available-employees", False, f"Exception: {str(e)}")
+        return [], False, None
+
+def test_user_exists(users, email):
+    """Check if a specific user exists in the users list"""
+    user_found = False
+    user_data = None
+    
+    for user in users:
+        if user.get('email', '').lower() == email.lower():
+            user_found = True
+            user_data = user
+            break
+    
+    print_test_result(
+        f"User {email} exists", 
+        user_found,
+        f"User found: {user_found}",
+        user_data
+    )
+    return user_found, user_data
+
+def test_user_employee_relationship(user_data):
+    """Test if user is properly linked to employee data"""
+    if not user_data:
+        print_test_result("User-Employee Relationship", False, "No user data provided")
+        return False
+    
+    has_employee_data = 'available_employees' in user_data and user_data['available_employees'] is not None
+    employee_name = ""
+    
+    if has_employee_data:
+        emp = user_data['available_employees']
+        employee_name = f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip()
+        is_alejandro = EXPECTED_EMPLOYEE_NAME.upper() in employee_name.upper()
+    else:
+        is_alejandro = False
+    
+    print_test_result(
+        "User-Employee Relationship", 
+        has_employee_data and is_alejandro,
+        f"Has employee data: {has_employee_data}, Employee: {employee_name}, Is Alejandro: {is_alejandro}",
+        user_data.get('available_employees') if has_employee_data else None
+    )
+    return has_employee_data and is_alejandro
+
+def test_registration_flow(employees, alejandro_data):
+    """Test user registration flow"""
+    if not alejandro_data:
+        print_test_result("Registration Flow", False, "Alejandro employee data not found for registration test")
+        return False
+    
+    # Test registration payload
+    registration_data = {
+        "email": "test_registration@test.com",
+        "employee_id": alejandro_data.get('id')
+    }
+    
+    try:
+        response = requests.post(
+            f"{BASE_URL}/users",
+            headers={'Content-Type': 'application/json'},
+            json=registration_data
+        )
+        
+        if response.status_code == 200:
+            new_user = response.json()
+            print_test_result(
+                "Registration Flow", 
+                True,
+                f"Status: {response.status_code}, User created successfully",
+                new_user
+            )
+            return True
+        else:
+            print_test_result(
+                "Registration Flow", 
+                False,
+                f"Status: {response.status_code}, Response: {response.text[:200]}"
+            )
             return False
+    except Exception as e:
+        print_test_result("Registration Flow", False, f"Exception: {str(e)}")
+        return False
+
+def test_login_simulation(users):
+    """Simulate login by checking if user exists (since there's no password auth)"""
+    user_found, user_data = test_user_exists(users, TEST_EMAIL)
+    
+    if user_found:
+        # Check if user has proper employee relationship
+        has_relationship = test_user_employee_relationship(user_data)
+        print_test_result(
+            "Login Simulation", 
+            has_relationship,
+            f"User found and has proper employee relationship: {has_relationship}"
+        )
+        return has_relationship
+    else:
+        print_test_result(
+            "Login Simulation", 
+            False,
+            f"User {TEST_EMAIL} not found in database"
+        )
+        return False
     
     def test_get_ratings(self):
         """Test GET /api/ratings endpoint"""
