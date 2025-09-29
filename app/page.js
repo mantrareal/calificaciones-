@@ -1425,6 +1425,7 @@ export default function App() {
         {(view === 'rate-closer' || view === 'rate-liner') && renderRatingForm()}
         {view === 'my-ratings' && renderMyRatings()}
         {view === 'follow-up' && renderFollowUp()}
+        {view === 'manager-dashboard' && renderManagerDashboard()}
         {view === 'all-ratings' && renderAllRatings()}
       </main>
 
