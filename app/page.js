@@ -844,12 +844,19 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Award className="h-8 w-8 text-primary mr-3" />
-              <h1 className="text-xl font-bold text-gray-900">Club Vacacional</h1>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_resort-feedback/artifacts/wqsdo1yo_pururialogotransparente.png" 
+                alt="PURURU Logo" 
+                className="h-10 w-auto mr-3"
+              />
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Club Vacacional</h1>
+                <p className="text-xs text-gray-500">Sistema de Calificación</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                {currentUser.first_name} {currentUser.last_name}
+                {currentUser.available_employees?.first_name} {currentUser.available_employees?.last_name}
               </span>
               <Button onClick={handleLogout} variant="outline" size="sm">
                 <LogOut className="h-4 w-4 mr-2" />
