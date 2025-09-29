@@ -221,46 +221,88 @@ def test_login_simulation(users):
         )
         return False
     
-    def test_get_ratings(self):
-        """Test GET /api/ratings endpoint"""
-        try:
-            response = requests.get(f"{self.base_url}/ratings")
-            if response.status_code == 200:
-                ratings = response.json()
-                if isinstance(ratings, list):
-                    self.log_test("GET Ratings", True, f"Retrieved {len(ratings)} ratings")
-                    
-                    # If there are ratings, verify structure
-                    if ratings:
-                        rating = ratings[0]
-                        required_fields = ['id', 'evaluator_id', 'evaluated_id', 'ratings_json']
-                        missing_fields = [field for field in required_fields if field not in rating]
-                        
-                        if missing_fields:
-                            self.log_test("GET Ratings Structure", False, f"Missing fields: {missing_fields}", rating)
-                            return False
-                        
-                        # Verify ratings_json is valid JSON
-                        try:
-                            if isinstance(rating['ratings_json'], str):
-                                json.loads(rating['ratings_json'])
-                            elif not isinstance(rating['ratings_json'], dict):
-                                self.log_test("GET Ratings Structure", False, "ratings_json is not valid JSON", rating)
-                                return False
-                        except json.JSONDecodeError:
-                            self.log_test("GET Ratings Structure", False, "ratings_json is not valid JSON", rating)
-                            return False
-                    
-                    return True
-                else:
-                    self.log_test("GET Ratings", False, "Response is not a list", ratings)
-                    return False
-            else:
-                self.log_test("GET Ratings", False, f"HTTP {response.status_code}: {response.text}")
-                return False
-        except Exception as e:
-            self.log_test("GET Ratings", False, f"Request error: {str(e)}")
-            return False
+def test_database_integrity():
+    """Test overall database integrity"""
+    print("=" * 60)
+    print("CLUB VACACIONAL BACKEND TESTING")
+    print("=" * 60)
+    print(f"Testing against: {BASE_URL}")
+    print(f"Test user: {TEST_EMAIL}")
+    print(f"Expected employee: {EXPECTED_EMPLOYEE_NAME}")
+    print(f"Expected employee count: {EXPECTED_EMPLOYEE_COUNT}")
+    print("=" * 60)
+    print()
+    
+    # Test API endpoints
+    api_working = test_api_root()
+    
+    # Test users endpoint
+    users = test_get_users()
+    
+    # Test available employees endpoint
+    employees, alejandro_found, alejandro_data = test_get_available_employees()
+    
+    # Test if prueba@test.com user exists
+    user_found, user_data = test_user_exists(users, TEST_EMAIL)
+    
+    # Test user-employee relationship
+    if user_found:
+        relationship_ok = test_user_employee_relationship(user_data)
+    else:
+        relationship_ok = False
+    
+    # Test registration flow
+    registration_ok = test_registration_flow(employees, alejandro_data)
+    
+    # Test login simulation
+    login_ok = test_login_simulation(users)
+    
+    # Summary
+    print("=" * 60)
+    print("TEST SUMMARY")
+    print("=" * 60)
+    
+    issues_found = []
+    
+    if not api_working:
+        issues_found.append("API root endpoint not working properly")
+    
+    if len(employees) != EXPECTED_EMPLOYEE_COUNT:
+        issues_found.append(f"Available employees count mismatch: found {len(employees)}, expected {EXPECTED_EMPLOYEE_COUNT}")
+    
+    if not alejandro_found:
+        issues_found.append(f"Employee {EXPECTED_EMPLOYEE_NAME} not found in available_employees table")
+    
+    if not user_found:
+        issues_found.append(f"Test user {TEST_EMAIL} not found in users table")
+    
+    if user_found and not relationship_ok:
+        issues_found.append(f"User {TEST_EMAIL} exists but not properly linked to employee {EXPECTED_EMPLOYEE_NAME}")
+    
+    if not registration_ok:
+        issues_found.append("Registration flow not working properly")
+    
+    if not login_ok:
+        issues_found.append(f"Login with {TEST_EMAIL} not working properly")
+    
+    if issues_found:
+        print("❌ CRITICAL ISSUES FOUND:")
+        for i, issue in enumerate(issues_found, 1):
+            print(f"   {i}. {issue}")
+    else:
+        print("✅ ALL TESTS PASSED - No critical issues found")
+    
+    print()
+    print("DETAILED FINDINGS:")
+    print(f"   • API endpoints working: {api_working}")
+    print(f"   • Users in database: {len(users)}")
+    print(f"   • Available employees: {len(employees)}")
+    print(f"   • Test user exists: {user_found}")
+    print(f"   • Employee relationship OK: {relationship_ok}")
+    print(f"   • Registration working: {registration_ok}")
+    print(f"   • Login simulation OK: {login_ok}")
+    
+    return len(issues_found) == 0
     
     def test_post_rating(self):
         """Test POST /api/ratings endpoint"""
