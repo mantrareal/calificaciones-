@@ -316,28 +316,22 @@ export default function App() {
               {view === 'register' && (
                 <>
                   <div>
-                    <Label htmlFor="firstName" className="text-white">Nombre</Label>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                      placeholder="Tu nombre"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="lastName" className="text-white">Apellido</Label>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                      className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                      placeholder="Tu apellido"
-                    />
+                    <Label htmlFor="selectEmployee" className="text-white">Selecciona tu nombre</Label>
+                    <Select value={selectedEmployeeId} onValueChange={setSelectedEmployeeId}>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Busca tu nombre..." />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60">
+                        {availableEmployees
+                          .filter(emp => !emp.is_taken)
+                          .sort((a, b) => `${a.first_name} ${a.last_name}`.localeCompare(`${b.first_name} ${b.last_name}`))
+                          .map(employee => (
+                          <SelectItem key={employee.id} value={employee.id}>
+                            {employee.first_name} {employee.last_name} #{employee.employee_number} ({employee.role.toUpperCase()})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </>
               )}
