@@ -881,6 +881,26 @@ export default function App() {
         {view === 'my-ratings' && renderMyRatings()}
         {view === 'follow-up' && renderFollowUp()}
       </main>
+
+      <footer className="bg-gray-50 border-t">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-center space-x-3">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_resort-feedback/artifacts/wqsdo1yo_pururialogotransparente.png" 
+              alt="PURURU Logo" 
+              className="h-6 w-auto"
+            />
+            <span className="text-sm text-gray-600">
+              Sistema desarrollado por <strong className="text-primary">PURURU</strong>
+            </span>
+          </div>
+          <div className="text-center mt-2">
+            <p className="text-xs text-gray-500">
+              © 2025 PURURU. Sistema de Calificación Club Vacacional.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
