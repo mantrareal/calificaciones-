@@ -219,12 +219,12 @@ export async function POST(request) {
         return NextResponse.json(newUser)
       
       case 'users/update-role':
-        const { userId, newRole } = body
+        const { employeeId, newRole } = body
         
-        const { data: updatedUser, error: updateError } = await supabase
-          .from('users')
+        const { data: updatedEmployee, error: updateError } = await supabase
+          .from('available_employees')
           .update({ role: newRole })
-          .eq('id', userId)
+          .eq('id', employeeId)
           .select()
           .single()
         
@@ -232,7 +232,7 @@ export async function POST(request) {
           return NextResponse.json({ error: updateError.message }, { status: 500 })
         }
         
-        return NextResponse.json(updatedUser)
+        return NextResponse.json(updatedEmployee)
       
       case 'ratings':
         const ratingData = {
