@@ -953,8 +953,17 @@ export default function App() {
   )
 
   // Función para calcular promedio de calificaciones
-  const calculateEmployeeAverage = (employeeId) => {
-    const employeeRatings = ratings.filter(r => r.evaluated_id === employeeId)
+  const calculateEmployeeAverage = (employeeId, dateFilter = null) => {
+    let employeeRatings = ratings.filter(r => r.evaluated_id === employeeId)
+    
+    // Filtrar por fecha si se especifica
+    if (dateFilter) {
+      employeeRatings = employeeRatings.filter(r => {
+        const ratingDate = new Date(r.date || r.created_at).toISOString().split('T')[0]
+        return ratingDate === dateFilter
+      })
+    }
+    
     if (employeeRatings.length === 0) return 0
     
     let totalScore = 0
@@ -969,6 +978,99 @@ export default function App() {
     })
     
     return totalQuestions > 0 ? (totalScore / totalQuestions) : 0
+  }
+
+  // Análisis de actividad diaria
+  const getDailyActivity = (date) => {
+    const dayRatings = ratings.filter(r => {
+      const ratingDate = new Date(r.date || r.created_at).toISOString().split('T')[0]
+      return ratingDate === date
+    })
+
+    // Empleados que calificaron (evaluadores)
+    const evaluators = [...new Set(dayRatings.map(r => r.evaluator_id))]
+    
+    // Empleados que fueron calificados
+    const evaluated = [...new Set(dayRatings.map(r => r.evaluated_id))]
+
+    // Empleados registrados total
+    const registeredEmployees = availableEmployees.filter(emp => emp.is_taken)
+    
+    // Empleados que NO calificaron
+    const didNotRate = registeredEmployees.filter(emp => !evaluators.includes(emp.id))
+    
+    return {
+      totalRatings: dayRatings.length,
+      totalEvaluators: evaluators.length,
+      totalEvaluated: evaluated.length,
+      totalRegistered: registeredEmployees.length,
+      didNotRate: didNotRate,
+      ratingsData: dayRatings
+    }
+  }
+
+  // Análisis de preguntas por día
+  const getDailyQuestionAnalysis = (date) => {
+    const dayRatings = ratings.filter(r => {
+      const ratingDate = new Date(r.date || r.created_at).toISOString().split('T')[0]
+      return ratingDate === date
+    })
+
+    const questionStats = {}
+    
+    dayRatings.forEach(rating => {
+      if (rating.ratings_json) {
+        // Procesar preguntas de estrellas
+        if (rating.ratings_json.stars) {
+          Object.entries(rating.ratings_json.stars).forEach(([question, score]) => {
+            if (!questionStats[question]) {
+              questionStats[question] = { type: 'stars', scores: [], total: 0, count: 0 }
+            }
+            questionStats[question].scores.push(score)
+            questionStats[question].total += score
+            questionStats[question].count += 1
+          })
+        }
+        
+        // Procesar preguntas Sí/No
+        if (rating.ratings_json.yesNo) {
+          Object.entries(rating.ratings_json.yesNo).forEach(([question, answer]) => {
+            if (!questionStats[question]) {
+              questionStats[question] = { type: 'yesNo', yes: 0, no: 0, total: 0 }
+            }
+            if (answer) questionStats[question].yes += 1
+            else questionStats[question].no += 1
+            questionStats[question].total += 1
+          })
+        }
+        
+        // Procesar preguntas numéricas
+        if (rating.ratings_json.numbers) {
+          Object.entries(rating.ratings_json.numbers).forEach(([question, number]) => {
+            if (!questionStats[question]) {
+              questionStats[question] = { type: 'numbers', values: [], total: 0, count: 0 }
+            }
+            questionStats[question].values.push(number)
+            questionStats[question].total += number
+            questionStats[question].count += 1
+          })
+        }
+      }
+    })
+
+    // Calcular promedios
+    Object.keys(questionStats).forEach(question => {
+      const stat = questionStats[question]
+      if (stat.type === 'stars') {
+        stat.average = stat.count > 0 ? (stat.total / stat.count) : 0
+      } else if (stat.type === 'numbers') {
+        stat.average = stat.count > 0 ? (stat.total / stat.count) : 0
+      } else if (stat.type === 'yesNo') {
+        stat.percentage = stat.total > 0 ? ((stat.yes / stat.total) * 100) : 0
+      }
+    })
+
+    return questionStats
   }
 
   // Dashboard Gerencial
