@@ -690,40 +690,170 @@ export default function App() {
           </CardContent>
         </Card>
 
-        {selectedUserId && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Criterios de Evaluación</CardTitle>
-              <p className="text-sm text-gray-600">
-                Califica cada criterio del 1 al 5 estrellas
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {categories.map(category => (
-                <RatingCard
-                  key={category}
-                  title={category}
-                  rating={ratingData[category] || 0}
-                  onRatingChange={(value) => handleRatingChange(category, value)}
-                />
-              ))}
+        {(selectedUserId || otherEmployeeName) && ratingForm && (
+          <div className="space-y-6">
+            {/* Preguntas Sí/No */}
+            {ratingForm.yesNoQuestions && ratingForm.yesNoQuestions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Preguntas Generales</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.yesNoQuestions.map(question => (
+                    <YesNoQuestion
+                      key={question}
+                      title={question}
+                      answer={yesNoAnswers[question]}
+                      onAnswerChange={(value) => setYesNoAnswers(prev => ({...prev, [question]: value}))}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="comments">Comentarios (Opcional)</Label>
+            {/* Preguntas con estrellas - Explicación */}
+            {ratingForm.starQuestions?.explanation && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>¿En qué medida estás de acuerdo o en desacuerdo con la explicación de:</CardTitle>
+                  <p className="text-sm text-gray-600">Califica del 1 al 5 estrellas</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.starQuestions.explanation.map(item => (
+                    <RatingCard
+                      key={`explanation_${item}`}
+                      title={item}
+                      rating={ratingData[`explanation_${item}`] || 0}
+                      onRatingChange={(value) => handleRatingChange(`explanation_${item}`, value)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Preguntas con estrellas - Ejemplos */}
+            {ratingForm.starQuestions?.examples && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>¿En qué medida estás de acuerdo o en desacuerdo con los ejemplos mostrados de:</CardTitle>
+                  <p className="text-sm text-gray-600">Califica del 1 al 5 estrellas</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.starQuestions.examples.map(item => (
+                    <RatingCard
+                      key={`examples_${item}`}
+                      title={item}
+                      rating={ratingData[`examples_${item}`] || 0}
+                      onRatingChange={(value) => handleRatingChange(`examples_${item}`, value)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Preguntas numéricas */}
+            {ratingForm.numberQuestions && ratingForm.numberQuestions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Preguntas Numéricas</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.numberQuestions.map(question => (
+                    <NumberQuestion
+                      key={question}
+                      title={question}
+                      value={numberAnswers[question]}
+                      onValueChange={(value) => setNumberAnswers(prev => ({...prev, [question]: value}))}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Preguntas con estrellas - Otras */}
+            {ratingForm.starQuestions?.other && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Evaluación Adicional</CardTitle>
+                  <p className="text-sm text-gray-600">Califica del 1 al 5 estrellas</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.starQuestions.other.map(item => (
+                    <RatingCard
+                      key={`other_${item}`}
+                      title={item}
+                      rating={ratingData[`other_${item}`] || 0}
+                      onRatingChange={(value) => handleRatingChange(`other_${item}`, value)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Preguntas específicas para Liners/FTM/FTB */}
+            {ratingForm.starQuestions?.usage && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Uso del Survey</CardTitle>
+                  <p className="text-sm text-gray-600">Califica del 1 al 5 estrellas</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.starQuestions.usage.map(item => (
+                    <RatingCard
+                      key={`usage_${item}`}
+                      title={item}
+                      rating={ratingData[`usage_${item}`] || 0}
+                      onRatingChange={(value) => handleRatingChange(`usage_${item}`, value)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Conexión con prospectos */}
+            {ratingForm.starQuestions?.connection && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Conexión con Prospectos</CardTitle>
+                  <p className="text-sm text-gray-600">Califica del 1 al 5 estrellas</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ratingForm.starQuestions.connection.map(item => (
+                    <RatingCard
+                      key={`connection_${item}`}
+                      title={item}
+                      rating={ratingData[`connection_${item}`] || 0}
+                      onRatingChange={(value) => handleRatingChange(`connection_${item}`, value)}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Comentarios */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Comentarios (Opcional)</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <Textarea
-                  id="comments"
                   value={comments}
                   onChange={(e) => setComments(e.target.value)}
                   placeholder="Escribe comentarios adicionales aquí..."
                   className="min-h-[100px]"
                 />
-              </div>
+              </CardContent>
+            </Card>
 
-              <Button onClick={submitRating} className="w-full" size="lg">
-                Enviar Calificación
-              </Button>
-            </CardContent>
-          </Card>
+            {/* Botón de envío */}
+            <Card>
+              <CardContent className="pt-6">
+                <Button onClick={submitRating} className="w-full" size="lg">
+                  Enviar Encuesta de Satisfacción
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
     )
