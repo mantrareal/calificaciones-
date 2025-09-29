@@ -926,6 +926,64 @@ export default function App() {
     </div>
   )
 
+  const renderAllRatings = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Todas las Calificaciones</h2>
+        <Button onClick={() => setView('dashboard')} variant="outline">
+          Volver
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4">
+        {ratings.map((rating, index) => {
+          const evaluatorEmployee = availableEmployees.find(emp => emp.id === rating.evaluator_id)
+          const evaluatedEmployee = availableEmployees.find(emp => emp.id === rating.evaluated_id)
+          
+          return (
+            <Card key={rating.id || index}>
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  Calificación #{index + 1}
+                </CardTitle>
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p><strong>Evaluador:</strong> {evaluatorEmployee ? `${evaluatorEmployee.first_name} ${evaluatorEmployee.last_name} (#${evaluatorEmployee.employee_number})` : 'Desconocido'}</p>
+                  <p><strong>Evaluado:</strong> {rating.other_employee_name || (evaluatedEmployee ? `${evaluatedEmployee.first_name} ${evaluatedEmployee.last_name} (#${evaluatedEmployee.employee_number})` : 'Desconocido')}</p>
+                  <p><strong>Fecha:</strong> {new Date(rating.date || rating.created_at).toLocaleDateString()}</p>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <strong className="text-sm">Datos guardados:</strong>
+                    <pre className="text-xs bg-gray-100 p-2 rounded mt-1 overflow-auto">
+                      {JSON.stringify(rating.ratings_json, null, 2)}
+                    </pre>
+                  </div>
+                  
+                  {rating.comments && (
+                    <div>
+                      <strong className="text-sm">Comentarios:</strong>
+                      <p className="text-sm text-gray-600 mt-1">{rating.comments}</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+        
+        {ratings.length === 0 && (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <p className="text-gray-600">No hay calificaciones guardadas aún</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  )
+
   const renderFollowUp = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
