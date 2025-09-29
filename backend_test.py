@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-Club Vacacional Rating System Backend API Tests
-Tests all CRUD operations for /api/users, /api/ratings, /api/follow-ups
+Club Vacacional Backend Testing Script
+Tests login, registration, and database issues as reported in the review request.
 """
 
 import requests
 import json
 import sys
-from datetime import datetime, date
+import os
+from datetime import datetime
 
-# Base URL for the API
-BASE_URL = "http://localhost:3000/api"
+# Get base URL from environment - using external URL for testing
+BASE_URL = "https://hadfdgbyxhbqgjycbftv.supabase.co/api"
+
+# Test configuration
+TEST_EMAIL = "prueba@test.com"
+TEST_PASSWORD = "test123"
+EXPECTED_EMPLOYEE_NAME = "ALEJANDRO ORTIZ BENITEZ"
+EXPECTED_EMPLOYEE_COUNT = 231
 
 class ClubVacacionalAPITester:
     def __init__(self):
