@@ -236,6 +236,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Rating Submission with New Data Structure"
     - "Database Schema Relationships"
     - "GET /api/users endpoint fix"
     - "Login functionality restoration"
@@ -244,7 +245,7 @@ test_plan:
     - "GET /api/users"
     - "Login Functionality"
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
   - task: "Login/Registration Issues Testing"
     implemented: true
