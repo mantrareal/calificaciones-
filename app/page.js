@@ -511,7 +511,7 @@ export default function App() {
             <div className="space-y-2">
               <Button 
                 onClick={() => changeUserRole('liner')}
-                variant={currentUser.role === 'liner' ? 'default' : 'outline'}
+                variant={currentUser.available_employees?.role === 'liner' ? 'default' : 'outline'}
                 className="w-full"
                 size="sm"
               >
@@ -519,7 +519,7 @@ export default function App() {
               </Button>
               <Button 
                 onClick={() => changeUserRole('closer')}
-                variant={currentUser.role === 'closer' ? 'default' : 'outline'}
+                variant={currentUser.available_employees?.role === 'closer' ? 'default' : 'outline'}
                 className="w-full"
                 size="sm"
               >
@@ -527,7 +527,7 @@ export default function App() {
               </Button>
               <Button 
                 onClick={() => changeUserRole('manager')}
-                variant={currentUser.role === 'manager' ? 'default' : 'outline'}
+                variant={currentUser.available_employees?.role === 'manager' ? 'default' : 'outline'}
                 className="w-full"
                 size="sm"
               >
