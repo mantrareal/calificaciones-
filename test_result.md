@@ -258,6 +258,18 @@ test_plan:
           agent: "testing"
           comment: "CRITICAL FINDINGS: 1) GET /api/users fails with 500 error due to missing database relationship between users and available_employees tables. 2) User prueba@test.com exists but cannot be retrieved. 3) Registration works correctly. 4) Available employees table has correct 231 records with ALEJANDRO ORTIZ BENITEZ. 5) Login fails because user data cannot be fetched. ROOT CAUSE: Missing foreign key relationship in Supabase schema prevents JOIN queries."
 
+  - task: "Rating Submission with New Data Structure"
+    implemented: true
+    working: false
+    file: "app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE IDENTIFIED: Rating submission fails with new data structure. Error: 'Could not find the other_employee_name column of ratings in the schema cache'. The new rating structure includes other_employee_name field for handling 'other' employees, but the database schema only has: id, evaluator_id, evaluated_id, ratings_json, comments, date, created_at. SOLUTION NEEDED: Add other_employee_name TEXT column to ratings table in Supabase. Simple ratings work fine, but new structure with stars/yesNo/numbers categories and other_employee_name field fails. 4 existing ratings will not be affected by schema change."
+
 agent_communication:
     - agent: "testing"
       message: "Comprehensive backend API testing completed successfully. All 8 critical tests passed: Database connection, API root, GET/POST users, GET/POST ratings, GET/POST follow-ups, sample data verification, and data structure validation. Supabase connection working correctly with proper JSONB support. All sample users present with correct roles. Ready for frontend integration or production use."
