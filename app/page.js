@@ -421,13 +421,13 @@ export default function App() {
                   <UserCheck className="h-12 w-12 text-primary mx-auto" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">
-                  {currentUser.role === 'liner' ? 'Calificar Closer' : 'Calificar Liner'}
+                  {currentUser.available_employees?.role === 'closer' ? 'Calificar Liner/FTB/FTM' : 'Calificar Closer'}
                 </h3>
                 <p className="text-gray-600 mb-4 text-sm">
                   Evalúa el desempeño de tu compañero
                 </p>
                 <Button 
-                  onClick={() => setView(currentUser.role === 'liner' ? 'rate-closer' : 'rate-liner')}
+                  onClick={() => setView(currentUser.available_employees?.role === 'closer' ? 'rate-liner' : 'rate-closer')}
                   className="w-full"
                 >
                   Comenzar Evaluación
