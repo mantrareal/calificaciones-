@@ -38,8 +38,6 @@ export default function App() {
   // Login/Register state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
 
   // Rating state
   const [selectedUserId, setSelectedUserId] = useState('')
