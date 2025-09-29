@@ -577,21 +577,43 @@ export default function App() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Seleccionar Usuario</CardTitle>
+            <CardTitle>Seleccionar Usuario para Calificar</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona un usuario para calificar" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredUsers.map(user => (
-                  <SelectItem key={user.id} value={user.id}>
-                    {user.first_name} {user.last_name} ({user.role})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Buscar empleado</Label>
+              <Input
+                placeholder="Escribe nombre, apellido o número..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-3"
+              />
+            </div>
+            
+            <div>
+              <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecciona un usuario para calificar" />
+                </SelectTrigger>
+                <SelectContent className="max-h-60">
+                  {filteredUsers
+                    .filter(user => {
+                      if (!searchTerm) return true
+                      const fullName = `${user.first_name} ${user.last_name} ${user.employee_number}`.toLowerCase()
+                      return fullName.includes(searchTerm.toLowerCase())
+                    })
+                    .map(user => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.first_name} {user.last_name} #{user.employee_number} ({user.role.toUpperCase()}) - {user.language}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="text-sm text-gray-600">
+              <strong>{filteredUsers.length}</strong> empleados disponibles para calificar
+            </div>
           </CardContent>
         </Card>
 
