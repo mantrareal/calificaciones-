@@ -115,7 +115,13 @@ export default function App() {
 
   const handleRegister = async (e) => {
     e.preventDefault()
-    const { data, error } = await auth.signUp(email, password, firstName, lastName)
+    
+    if (!selectedEmployeeId) {
+      alert('Por favor selecciona tu nombre de la lista')
+      return
+    }
+    
+    const { data, error } = await auth.signUp(email, password, selectedEmployeeId)
     
     if (error) {
       alert('Error: ' + error.message)
