@@ -73,6 +73,13 @@ export default function App() {
         setUsers(userData)
       }
 
+      // Fetch available employees
+      const employeesResponse = await fetch('/api/available-employees')
+      if (employeesResponse.ok) {
+        const employeesData = await employeesResponse.json()
+        setAvailableEmployees(employeesData)
+      }
+
       // Fetch ratings
       const ratingsResponse = await fetch('/api/ratings')
       if (ratingsResponse.ok) {
@@ -81,8 +88,8 @@ export default function App() {
         
         // Filter my ratings (where I was evaluated)
         const user = auth.getCurrentUser()
-        if (user) {
-          const myRatingsData = ratingsData.filter(rating => rating.evaluated_id === user.id)
+        if (user && user.available_employees) {
+          const myRatingsData = ratingsData.filter(rating => rating.evaluated_id === user.available_employees.id)
           setMyRatings(myRatingsData)
         }
       }
