@@ -526,16 +526,16 @@ export default function App() {
               <div className="mb-4">
                 <BarChart3 className="h-12 w-12 text-green-500 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Reportes</h3>
+              <h3 className="text-lg font-semibold mb-2">Ver Todas las Calificaciones</h3>
               <p className="text-gray-600 mb-4 text-sm">
-                Ver estadísticas del equipo
+                Ver todas las encuestas guardadas
               </p>
               <Button 
+                onClick={() => setView('all-ratings')}
                 variant="outline"
                 className="w-full"
-                disabled
               >
-                Próximamente
+                Ver Calificaciones ({ratings.length})
               </Button>
             </CardContent>
           </Card>
