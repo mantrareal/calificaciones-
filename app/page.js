@@ -635,7 +635,9 @@ export default function App() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Seleccionar Usuario para Calificar</CardTitle>
+            <CardTitle>
+              {isRatingCloser ? '¿Quién fue tu closer?' : 'Selecciona al Rep (liner, ftm, ftb)'}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -665,9 +667,22 @@ export default function App() {
                         {user.first_name} {user.last_name} #{user.employee_number} ({user.role.toUpperCase()}) - {user.language}
                       </SelectItem>
                     ))}
+                  <SelectItem value="other">Otros (escribir nombre)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            
+            {selectedUserId === 'other' && (
+              <div>
+                <Label>Si tu respuesta fue "Otros", escribe su nombre:</Label>
+                <Input
+                  placeholder="Nombre completo del empleado"
+                  value={otherEmployeeName}
+                  onChange={(e) => setOtherEmployeeName(e.target.value)}
+                  className="mt-2"
+                />
+              </div>
+            )}
             
             <div className="text-sm text-gray-600">
               <strong>{filteredUsers.length}</strong> empleados disponibles para calificar
