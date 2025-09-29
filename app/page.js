@@ -9,6 +9,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { StarRating } from '@/components/ui/star-rating'
 import { RatingCard } from '@/components/ui/rating-card'
+import { YesNoQuestion } from '@/components/ui/yes-no-question'
+import { NumberQuestion } from '@/components/ui/number-question'
 import { auth } from '@/lib/supabase'
 import { 
   Users, 
