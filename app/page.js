@@ -265,14 +265,29 @@ export default function App() {
   ]
 
   const getFilteredUsers = () => {
-    if (!currentUser) return []
+    if (!currentUser || !currentUser.available_employees) return []
     
-    if (currentUser.role === 'liner') {
-      return users.filter(user => user.role === 'closer')
-    } else if (currentUser.role === 'closer') {
-      return users.filter(user => user.role === 'liner')
+    const myRole = currentUser.available_employees.role
+    
+    // Get available employees that can be rated by current user's role
+    let targetRoles = []
+    
+    if (myRole === 'liner') {
+      targetRoles = ['closer']
+    } else if (myRole === 'closer') {
+      targetRoles = ['liner', 'ftb', 'ftm', 'ftm_ftb']
+    } else if (myRole === 'ftb' || myRole === 'ftm' || myRole === 'ftm_ftb') {
+      targetRoles = ['liner']
     }
-    return []
+    
+    // Filter available employees by target roles and exclude self
+    const ratableEmployees = availableEmployees.filter(emp => 
+      targetRoles.includes(emp.role) && 
+      emp.is_taken && 
+      emp.id !== currentUser.available_employees.id
+    )
+    
+    return ratableEmployees
   }
 
   const getRatingCategories = () => {
