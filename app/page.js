@@ -521,24 +521,44 @@ export default function App() {
         )}
 
         {currentUser.available_employees?.role === 'manager' && (
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="mb-4">
-                <BarChart3 className="h-12 w-12 text-green-500 mx-auto" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Ver Todas las Calificaciones</h3>
-              <p className="text-gray-600 mb-4 text-sm">
-                Ver todas las encuestas guardadas
-              </p>
-              <Button 
-                onClick={() => setView('all-ratings')}
-                variant="outline"
-                className="w-full"
-              >
-                Ver Calificaciones ({ratings.length})
-              </Button>
-            </CardContent>
-          </Card>
+          <>
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4">
+                  <BarChart3 className="h-12 w-12 text-blue-500 mx-auto" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Dashboard Gerencial</h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Estadísticas, rankings y análisis
+                </p>
+                <Button 
+                  onClick={() => setView('manager-dashboard')}
+                  className="w-full"
+                >
+                  Ver Dashboard
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4">
+                  <ClipboardList className="h-12 w-12 text-green-500 mx-auto" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Calificaciones Detalladas</h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Ver todas las evaluaciones completas
+                </p>
+                <Button 
+                  onClick={() => setView('all-ratings')}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Ver Evaluaciones ({ratings.length})
+                </Button>
+              </CardContent>
+            </Card>
+          </>
         )}
 
         {/* Admin Tools - For testing */}
