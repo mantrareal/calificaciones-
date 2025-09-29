@@ -618,7 +618,7 @@ export default function App() {
   )
 
   const renderRatingForm = () => {
-    const categories = getRatingCategories()
+    const ratingForm = getCurrentRatingForm()
     const filteredUsers = getFilteredUsers()
     const isRatingCloser = view === 'rate-closer'
 
@@ -626,7 +626,7 @@ export default function App() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold">
-            {isRatingCloser ? 'Calificar Closer' : 'Calificar Liner'}
+            {isRatingCloser ? 'Encuesta de satisfacción - Califica al Closer' : 'Encuesta de satisfacción - Califica a Representantes de Ventas'}
           </h2>
           <Button onClick={() => setView('dashboard')} variant="outline">
             Volver
