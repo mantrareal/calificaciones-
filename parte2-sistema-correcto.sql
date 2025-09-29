@@ -1,0 +1,136 @@
+-- PARTE 2: FTB, FTM y LINERS (sin emails inventados)
+
+-- Insertar FTB disponibles
+INSERT INTO available_employees (id, employee_number, first_name, last_name, role, language) VALUES
+('avail_68535', '68535', 'AXEL BYRON', 'JURADO TORRES', 'ftb', 'BILL'),
+('avail_51687', '51687', 'CLAUDIA PATRICIA', 'VELAZQUEZ VELAZQUEZ', 'ftb', 'BILL'),
+('avail_53494', '53494', 'ERNESTO', 'CARDENAS MONTERO', 'ftb', 'ESP'),
+('avail_69078', '69078', 'SERGIO ABRAHAM', 'CASTILLO PENICHE', 'ftb', 'BILL');
+
+-- Insertar FTM disponibles
+INSERT INTO available_employees (id, employee_number, first_name, last_name, role, language) VALUES
+('avail_67000', '67000', 'AGUSTIN ADRIAN', 'LUCERO AHUMADA', 'ftm', 'ESP'),
+('avail_26044', '26044', 'ALICIA', 'SALINAS TORRES', 'ftm', 'BILL'),
+('avail_37205', '37205', 'ALISON JOSE', 'ROQUE BUENO', 'ftm', 'BILL'),
+('avail_68242', '68242', 'ANA GUADALUPE', 'TORRES FERNANDEZ', 'ftm', 'ESP'),
+('avail_66348', '66348', 'ARIADNA BERENICE', 'FERNANDEZ OLIVARES', 'ftm', 'ESP'),
+('avail_64761', '64761', 'CARLOS GENEROSO', 'MARTINEZ VON STERNENFELS', 'ftm', 'BILL'),
+('avail_49631', '49631', 'DANIEL HUITZI', 'SAAVEDRA URZUA', 'ftm', 'BILL'),
+('avail_65596', '65596', 'DANIEL VICENTE', 'LOPEZ FALCON', 'ftm', 'BILL'),
+('avail_64520', '64520', 'DANIELA', 'LOPEZ KURI', 'ftm', 'ESP'),
+('avail_51850', '51850', 'EDUARDO', 'PINTOR ZARATE', 'ftm', 'BILL'),
+('avail_65881', '65881', 'FRANCISCA PAULETTE', 'CERDA HERNANDEZ', 'ftm', 'ESP'),
+('avail_17961', '17961', 'FREDDY', 'TORRES PEÑALOZA', 'ftm', 'BILL'),
+('avail_66019', '66019', 'GLORIA NEIDAY', 'DE LOS SANTOS SOLORIO', 'ftm', 'BILL'),
+('avail_67906', '67906', 'GUADALUPE', 'TOBON VILLANUEVA', 'ftm', 'ESP'),
+('avail_66010', '66010', 'IGNACIO ALBERTO', 'ARAGON SOLIS', 'ftm', 'ESP'),
+('avail_65340', '65340', 'JAVIER', 'ESPINOSA SAUZA', 'ftm', 'BILL'),
+('avail_69019', '69019', 'JAZMIN SHEILA', 'ESQUIVEL BUCIO', 'ftm', 'ESP'),
+('avail_68247', '68247', 'JENNIFER PAOLA', 'NUÑO DE LA TORRE', 'ftm', 'BILL'),
+('avail_32709', '32709', 'JESUS ISAAC', 'ALZUA MENDOZA', 'ftm', 'BILL'),
+('avail_68990', '68990', 'JESUS SAIS', 'CAMACHO ORTIZ', 'ftm', 'BILL'),
+('avail_51689', '51689', 'JESUS SANTIAGO', 'TOVAR RODRIGUEZ', 'ftm', 'BILL'),
+('avail_68094', '68094', 'JORGE ALEJANDRO', 'GARZA GUERRA', 'ftm', 'BILL'),
+('avail_30661', '30661', 'JOSE ALEJANDRO', 'VELASQUEZ PORTILLA', 'ftm', 'BILL'),
+('avail_11552', '11552', 'JOSE ARTURO', 'SORIA GONZALEZ', 'ftm', 'BILL'),
+('avail_34801', '34801', 'JOSE MANUEL', 'PEREZ ZAMUDIO', 'ftm', 'BILL'),
+('avail_39388', '39388', 'JOSE ROMAN', 'GIL LOPEZ', 'ftm', 'ESP'),
+('avail_67133', '67133', 'JULIO ALFONSO', 'MENDEZ ESPINOSA', 'ftm', 'BILL'),
+('avail_40945', '40945', 'LUZ MARGARITA', 'ORTEGA MAC PHERSON', 'ftm', 'ESP'),
+('avail_66018', '66018', 'MARIA DE LOS ANGELES', 'SANCHEZ CORDOVA', 'ftm', 'ESP'),
+('avail_36653', '36653', 'MARIA ELENA', 'LOPEZ CABRERA', 'ftm', 'ESP'),
+('avail_66318', '66318', 'MARTHA VIRIDIANA', 'REYNA CARRERA', 'ftm', 'ESP'),
+('avail_52814', '52814', 'MAYCOL JOSEFAT', 'JUAREZ VAZQUEZ', 'ftm', 'ESP'),
+('avail_11118', '11118', 'MONICA ALEJANDRA', 'KAYLAN ECHAURI QUEVEDO', 'ftm', 'ESP'),
+('avail_66315', '66315', 'NOEL FRANCESCO', 'REYNOSO CARRERA', 'ftm', 'BILL'),
+('avail_35103', '35103', 'SALOMON', 'DIAZ SERRANO', 'ftm', 'BILL'),
+('avail_52698', '52698', 'ULISES ELIAS JACOB', 'MARTINEZ ACOSTA', 'ftm', 'BILL'),
+('avail_41471', '41471', 'VICTOR', 'PONCE LIMA', 'ftm', 'BILL'),
+('avail_66020', '66020', 'VIRIDIANA', 'RAMIREZ PROMOTOR', 'ftm', 'ESP'),
+('avail_64682', '64682', 'VIVIANA AMEYALLI', 'JUKAWA TOLEDO', 'ftm', 'BILL'),
+('avail_39374', '39374', 'WAEL DALI', 'REYES DE LA TORRE', 'ftm', 'BILL'),
+('avail_16081', '16081', 'YAELI ANITH', 'ROMERO GIL', 'ftm', 'BILL');
+
+-- Insertar FTM/FTB disponible
+INSERT INTO available_employees (id, employee_number, first_name, last_name, role, language) VALUES
+('avail_17293', '17293', 'LUIS RICARDO', 'ISLAS GONZALEZ', 'ftm_ftb', 'BILL');
+
+-- LINERS PARTE 1 (primeros 66)
+INSERT INTO available_employees (id, employee_number, first_name, last_name, role, language) VALUES
+('avail_68891', '68891', 'AARON DAVID', 'GARCIA VELAZQUEZ', 'liner', 'BILL'),
+('avail_50408', '50408', 'ADRIAN ALEJANDRO', 'GOMEZ GOMEZ', 'liner', 'ESP'),
+('avail_67901', '67901', 'ALBA', 'BERENGUER SOLE', 'liner', 'ESP'),
+('avail_51078', '51078', 'ALEJANDRO ANTONIO', 'ESQUIVEL AGUIRRE', 'liner', 'BILL'),
+('avail_66513', '66513', 'ALINE', 'DE LA VEGA SALCEDO', 'liner', 'ESP'),
+('avail_64719', '64719', 'ALINE XIMENA', 'HERNANDEZ GUZMAN', 'liner', 'ESP'),
+('avail_68991', '68991', 'ALLEXA SOFIA', 'MONTES DE OCA ULLOA', 'liner', 'BILL'),
+('avail_68218', '68218', 'ANA ELIZABETH', 'ENRIQUEZ CONTRERAS', 'liner', 'ESP'),
+('avail_66230', '66230', 'ANA ROSA', 'REYNOSO REYNOSO', 'liner', 'BILL'),
+('avail_16300', '16300', 'ANA VICTORIA', 'ZAMITIZ ZAYAS', 'liner', 'ESP'),
+('avail_68721', '68721', 'ANDREA LIZETH', 'LEOS MONREAL', 'liner', 'BILL'),
+('avail_35300', '35300', 'ANDREA SELENE', 'AGUIRRE ORTIZ', 'liner', 'BILL'),
+('avail_64683', '64683', 'ANGEL MARCIAL', 'MARQUEZ PEREZ', 'liner', 'BILL'),
+('avail_41657', '41657', 'ANTONI ALEXANDER', 'SANCHEZ RAMOS', 'liner', 'ESP'),
+('avail_67471', '67471', 'ARTHUR YUSEPH', 'POZOS AYALA', 'liner', 'BILL'),
+('avail_66342', '66342', 'ARTURO', 'BERMAN GUADARRAMA', 'liner', 'BILL'),
+('avail_38374', '38374', 'BENJAMIN', 'CRUZ TELLO', 'liner', 'BILL'),
+('avail_66234', '66234', 'BLANCA RUTH', 'AREVALO LOPEZ', 'liner', 'ESP'),
+('avail_68253', '68253', 'BRANDON', 'MALDONADO ORTIZ', 'liner', 'BILL'),
+('avail_66244', '66244', 'CAMILA REINA', 'GONDA', 'liner', 'ESP'),
+('avail_45798', '45798', 'CHRISTIAN ISRAEL', 'CAMPOS RAMIREZ', 'liner', 'BILL'),
+('avail_50857', '50857', 'CIRY MALEYVI', 'CUPIDO GARCILIANO', 'liner', 'ESP'),
+('avail_64512', '64512', 'DANIELA ANGELICA', 'ESTEBANEZ GARCIA', 'liner', 'ESP'),
+('avail_68255', '68255', 'DANNY EMERSON', 'MERCADO CHAVEZ', 'liner', 'BILL'),
+('avail_68234', '68234', 'DAVID ALI', 'MORALES PALACIOS', 'liner', 'ESP'),
+('avail_64724', '64724', 'DAVID ANTONIO', 'GALINDO CAO', 'liner', 'BILL'),
+('avail_68248', '68248', 'DAVID', 'CERINO PEREZ', 'liner', 'BILL'),
+('avail_66240', '66240', 'DAVID EDUARDO', 'LUGO CANO', 'liner', 'BILL'),
+('avail_66096', '66096', 'DAVID', 'MALAGON OJEDA', 'liner', 'BILL'),
+('avail_67472', '67472', 'DAVID', 'VELAZQUEZ ARREOLA', 'liner', 'ESP'),
+('avail_69081', '69081', 'DIEGO ARMANDO', 'REYES VALDES', 'liner', 'BILL'),
+('avail_35314', '35314', 'DIEGO', 'SANDOVAL PEREZ', 'liner', 'ESP'),
+('avail_68873', '68873', 'DOMINGO JESUS', 'PAREDES ACOSTA', 'liner', 'BILL'),
+('avail_64853', '64853', 'EDGAR JUARI', 'PIÑA VALENCIA', 'liner', 'BILL'),
+('avail_43812', '43812', 'EMILIO', 'CAMARGO PONCE', 'liner', 'ESP'),
+('avail_23748', '23748', 'EMMANUEL', 'ESTRADA CHE', 'liner', 'ESP'),
+('avail_68986', '68986', 'ENDRICH IVAN', 'REYES ESCOBAR', 'liner', 'BILL'),
+('avail_46204', '46204', 'ERIKA MARIANA', 'ABREGO MORENO', 'liner', 'ESP'),
+('avail_64775', '64775', 'ERNESTO', 'BLANCARTE MENDOZA', 'liner', 'BILL'),
+('avail_66232', '66232', 'ESTEFANIA', 'RIVERA LEON', 'liner', 'BILL'),
+('avail_66527', '66527', 'ESTEFANIA', 'ROMERO VELIZ', 'liner', 'BILL'),
+('avail_68704', '68704', 'EVA CAROLINA', 'MAGAÑA LOPEZ', 'liner', 'BILL'),
+('avail_66885', '66885', 'FABIOLA JACQUELINE', 'HINOJOSA VARGAS', 'liner', 'ESP'),
+('avail_49635', '49635', 'FERNANDO', 'OROZCO CASTILLO', 'liner', 'BILL'),
+('avail_50526', '50526', 'FERNANDO', 'SANDOVAL LEYVA', 'liner', 'BILL'),
+('avail_40471', '40471', 'FRANCISCO', 'HUITRON MORALES', 'liner', 'BILL'),
+('avail_3546', '3546', 'FREDY MANUEL', 'VILLALOBOS ROMERO', 'liner', 'ESP'),
+('avail_35312', '35312', 'FRIDA PAULINA', 'RODRIGUEZ GUEVARA', 'liner', 'ESP'),
+('avail_54168', '54168', 'GABRIEL ANTONIO', 'BOTELLO ROJAS', 'liner', 'BILL'),
+('avail_43397', '43397', 'GIBRAN ROBERTO', 'TEC VAZQUEZ', 'liner', 'BILL'),
+('avail_68907', '68907', 'GONZALO', 'MORELOS VARGAS', 'liner', 'BILL'),
+('avail_64720', '64720', 'HECTOR MANUEL', 'CRUZ AGUILAR', 'liner', 'BILL'),
+('avail_67319', '67319', 'ISAAC BENJAMIN', 'GONZALEZ GUZMAN', 'liner', 'BILL'),
+('avail_42919', '42919', 'ISAAC', 'MANCILLA HERNANDEZ', 'liner', 'BILL'),
+('avail_49415', '49415', 'IVAN DANIEL', 'PAN ORDOÑEZ', 'liner', 'BILL'),
+('avail_66256', '66256', 'IVAN MATIAS', 'VALENTINI', 'liner', 'ESP'),
+('avail_67879', '67879', 'IVETTE', 'DELGADO CARREON', 'liner', 'BILL'),
+('avail_66245', '66245', 'IVONNE IVETTE', 'MARTINEZ VAZQUEZ', 'liner', 'ESP'),
+('avail_50431', '50431', 'IVONNE', 'SANCHEZ MORENO', 'liner', 'BILL'),
+('avail_23671', '23671', 'JAVIER', 'CAMACHO GUTIERREZ', 'liner', 'BILL'),
+('avail_51361', '51361', 'JAVIER NORMAN', 'VILA', 'liner', 'ESP'),
+('avail_9990', '9990', 'JENNIFER LORENA', 'ORTEGA SANCHEZ', 'liner', 'BILL'),
+('avail_66306', '66306', 'JENNIFER XIOMARA', 'RUIZ ORTIZ', 'liner', 'BILL'),
+('avail_66301', '66301', 'JESSICA ESMERALDA', 'CANALES GUTIERREZ', 'liner', 'ESP'),
+('avail_68239', '68239', 'JESSICA MARISSA', 'CAMPUZANO SANCHEZ', 'liner', 'BILL'),
+('avail_11259', '11259', 'JESSICA', 'SANCHEZ VAZQUEZ', 'liner', 'ESP'),
+('avail_68790', '68790', 'JESUS FRANCISCO', 'LOPEZ RAMOS', 'liner', 'BILL'),
+('avail_68797', '68797', 'JESUS JAVIER', 'CASTRO FRANCO', 'liner', 'BILL');
+
+-- VERIFICAR PROGRESO PARTE 2
+SELECT 'FTB DISPONIBLES' as tipo, COUNT(*) as cantidad FROM available_employees WHERE role = 'ftb'
+UNION ALL
+SELECT 'FTM DISPONIBLES' as tipo, COUNT(*) as cantidad FROM available_employees WHERE role = 'ftm'
+UNION ALL
+SELECT 'FTM_FTB DISPONIBLES' as tipo, COUNT(*) as cantidad FROM available_employees WHERE role = 'ftm_ftb'
+UNION ALL
+SELECT 'LINERS DISPONIBLES (PARCIAL)' as tipo, COUNT(*) as cantidad FROM available_employees WHERE role = 'liner';
